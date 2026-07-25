@@ -17,7 +17,7 @@ export class SelectionNotificationComponent extends SignalsConsumerMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    const { selectedProduct$, filteredProducts$$ } = this.getSignals();
+    const { selectedProduct$, filteredProducts$$ } = this.signals;
     this.watch(
       [selectedProduct$, filteredProducts$$],
       ([{ value: selectedProduct }, { value: filteredProducts }]) => {

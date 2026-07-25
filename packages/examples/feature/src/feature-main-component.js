@@ -34,7 +34,9 @@ export class FeatureMainComponent extends SignalsProviderMixin(
     super.connectedCallback();
 
     // get shared signals and provide them to child components using the consumer mixin
-    this.signals = this.setSignals(createSignals());
+    const sharedSignals = createSignals();
+    // set the shared signals on the provider mixin so that child components can consume them
+    this.signals = sharedSignals;
 
     // local signal only in this element
     const counter$ = this.signal(0);
@@ -45,9 +47,12 @@ export class FeatureMainComponent extends SignalsProviderMixin(
       counter: counter$,
     });
 
+    // put some signals on the local scope for use inside the element
+    const { products$, productOptions$ } = sharedSignals;
+
     await Promise.all([
-      this.signals.products$.fetchProducts(),
-      this.signals.productOptions$.fetchOptions(),
+      products$.fetchProducts(),
+      productOptions$.fetchOptions(),
     ]);
   }
 

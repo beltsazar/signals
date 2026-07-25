@@ -25,11 +25,11 @@ export class IntermediateChildComponent extends SignalsProviderMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    const sharedSignals = this.getSignals();
+    const sharedSignals = this.signals;
     // eslint-disable-next-line
     console.log("sharedSignals:", sharedSignals);
     this.testSignal2$ = this.signal(2);
-    this.setSignals({ ...sharedSignals, testSignal2$: this.testSignal2$ });
+    this.signals = { ...sharedSignals, testSignal2$: this.testSignal2$ };
   }
 
   disconnectedCallback() {

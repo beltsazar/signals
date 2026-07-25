@@ -24,7 +24,7 @@ export class MainComponent extends SignalsProviderMixin(
     super.connectedCallback();
 
     this.testSignal$ = this.signal(0);
-    this.setSignals({ testSignal$: this.testSignal$ });
+    this.signals = { testSignal$: this.testSignal$ };
   }
 
   disconnectedCallback() {

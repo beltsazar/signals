@@ -15,7 +15,7 @@ export class ChildComponent extends SignalsConsumerMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    const sharedSignals = this.getSignals();
+    const sharedSignals = this.signals;
     // eslint-disable-next-line
     console.log("sharedSignals:", sharedSignals);
   }
