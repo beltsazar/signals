@@ -1,10 +1,9 @@
 import { html } from "lit";
 import { http, delay, HttpResponse } from "msw";
-import "../packages/example-feature/src/feature-component.js";
 
-import { Option } from "../packages/example-feature/src/transformers/products/objects/Option.js";
-import { Product } from "../packages/example-feature/src/transformers/products/objects/Product.js";
-import { ProductList } from "../packages/example-feature/src/transformers/products/objects/ProductList.js";
+import { Option } from "../packages/examples/feature/src/transformers/products/objects/Option.js";
+import { Product } from "../packages/examples/feature/src/transformers/products/objects/Product.js";
+import { ProductList } from "../packages/examples/feature/src/transformers/products/objects/ProductList.js";
 
 const options = [
   new Option(1, "Versatile"),
@@ -22,7 +21,7 @@ const products = new ProductList(
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
-  title: "Examples/Full Feature",
+  title: "Examples/Feature",
   render: () => html`
     <feature-component heading="Product selector 1"></feature-component>
   `,

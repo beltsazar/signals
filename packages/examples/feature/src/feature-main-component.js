@@ -1,13 +1,13 @@
 import { LitElement, css, html } from "lit";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
-import { SignalsProviderMixin } from "../../signals/index.js";
+import { SignalsProviderMixin } from "../../../signals/index.js";
 import { createSignals } from "./signals/index.js";
 import { SelectedProductComponent } from "./components/selected-product.js";
 import { SelectorComponent } from "./components/selector.js";
 import { ProductsComponent } from "./components/products.js";
 import { SelectionNotificationComponent } from "./components/selection-notification.js";
 
-export class FeatureComponent extends SignalsProviderMixin(
+export class FeatureMainComponent extends SignalsProviderMixin(
   ScopedElementsMixin(LitElement),
 ) {
   constructor() {
@@ -121,5 +121,3 @@ export class FeatureComponent extends SignalsProviderMixin(
     `;
   }
 }
-
-window.customElements.define("feature-component", FeatureComponent);

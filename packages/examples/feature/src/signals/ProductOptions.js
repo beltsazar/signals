@@ -1,4 +1,4 @@
-import { Signal } from "../../../signals/index.js";
+import { Signal } from "../../../../signals/index.js";
 
 export class ProductOptions extends Signal {
   constructor(productsAPI$) {
