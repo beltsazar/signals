@@ -24,7 +24,7 @@ export class ApiNotificationsComponent extends SignalsConsumerMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    const api$ = this.sharedSignals[this.apiName];
+    const api$ = this.getSignals()[this.apiName];
     this.watch(
       this.computed(api$, ({ value }) => value[this.endpoint]),
       ({ value: { isCompleted, isSuccess, isError, isPending } }) => {

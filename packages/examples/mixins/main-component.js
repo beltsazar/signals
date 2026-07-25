@@ -1,8 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
-import { SignalsConsumerMixin } from "../../signals/index.js";
+import { SignalsProviderMixin } from "../../signals/index.js";
+import { IntermediateChildComponent } from "./intermediate-child-component.js";
 
-export class MainComponent extends SignalsConsumerMixin(
+export class MainComponent extends SignalsProviderMixin(
   ScopedElementsMixin(LitElement),
 ) {
   constructor() {
@@ -10,58 +11,39 @@ export class MainComponent extends SignalsConsumerMixin(
   }
 
   static get properties() {
+    return {};
+  }
+
+  static get scopedElements() {
     return {
-      product: { type: Object, state: true },
+      "intermediate-child-component": IntermediateChildComponent,
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
-    const { selectedProduct$ } = this.sharedSignals;
-    this.mapStateToSignals({ product: selectedProduct$ });
+
+    this.testSignal$ = this.signal(0);
+    this.setSignals({ testSignal$: this.testSignal$ });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  showProduct(product) {
-    return html`
-      <h3>${product.name}</h3>
-      <ul>
-        ${product.options.map(option => html`<li>${option.name}</li>`)}
-      </ul>
-      <p>Price: &euro; ${product.price}</p>
-    `;
-  }
-
   render() {
-    return html`<h2>Selection</h2>
-      ${
-        this.product
-          ? html`${this.showProduct(this.product)}`
-          : "No product selected yet"
-      } `;
+    return html`<h1>Main Component</h1>
+      <p>Providing shared signals to children</p>
+      <intermediate-child-component></intermediate-child-component> `;
   }
 
   static get styles() {
     return css`
       :host {
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
         display: block;
         border: 1px solid #000;
         padding: 16px;
-      }
-
-      h2,
-      h3 {
-        margin: 0 0 4px 0;
-        padding: 0;
-      }
-
-      ul {
-        margin: 16px;
-        padding: 0;
       }
     `;
   }
