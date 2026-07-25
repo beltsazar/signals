@@ -5,7 +5,7 @@ import { ProductFilter } from "./ProductFilter.js";
 import { FilteredProducts } from "./computed/FilteredProducts.js";
 import { ProductsAPI } from "./services/ProductsAPI.js";
 
-export function createSharedSignals() {
+export function createSignals() {
   const productsAPI$ = new ProductsAPI();
   const products$ = new Products(productsAPI$);
   const productOptions$ = new ProductOptions(productsAPI$);

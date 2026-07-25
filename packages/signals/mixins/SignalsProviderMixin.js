@@ -12,10 +12,6 @@ export const SignalsProviderMixin = superClass =>
       this.#contextProvider.setValue(signals);
     }
 
-    get sharedSignals() {
-      return this.#sharedSignals;
-    }
-
     disconnectedCallback() {
       super.disconnectedCallback();
       // dispose provided shared signals when the element is disconnected

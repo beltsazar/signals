@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "lit";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
 import { SignalsProviderMixin } from "../../signals/index.js";
-import { createSharedSignals } from "./signals/index.js";
+import { createSignals } from "./signals/index.js";
 import { SelectedProductComponent } from "./components/selected-product.js";
 import { SelectorComponent } from "./components/selector.js";
 import { ProductsComponent } from "./components/products.js";
@@ -12,10 +12,12 @@ export class FeatureComponent extends SignalsProviderMixin(
 ) {
   constructor() {
     super();
-    this.sharedSignals = createSharedSignals();
+    const signals = createSignals();
+    // provide these signals to child components using the mixin
+    this.sharedSignals = signals;
 
     // use shared signals in this element
-    const { products$, productOptions$ } = this.sharedSignals;
+    const { products$, productOptions$ } = signals;
     this.products$ = products$;
     this.productOptions$ = productOptions$;
 
