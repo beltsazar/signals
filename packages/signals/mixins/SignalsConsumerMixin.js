@@ -6,7 +6,7 @@ export const SignalsConsumerMixin = superClass =>
   class extends SignalsBaseMixin(superClass) {
     #contextConsumer = new ContextConsumer(this, { context });
 
-    get signals() {
+    getSignals() {
       return this.#contextConsumer.value;
     }
   };

@@ -7,9 +7,10 @@ export const SignalsProviderMixin = superClass =>
     #contextProvider = new ContextProvider(this, { context });
     #sharedSignals = {};
 
-    set signals(signals) {
+    setSignals(signals) {
       this.#sharedSignals = signals;
       this.#contextProvider.setValue(signals);
+      return signals;
     }
 
     disconnectedCallback() {

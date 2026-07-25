@@ -14,7 +14,10 @@ export class IntermediateChildComponent extends SignalsProviderMixin(
   }
 
   static get properties() {
-    return {};
+    return {
+      signalValue1: { type: String, state: true },
+      signalValue2: { type: String, state: true },
+    };
   }
 
   static get scopedElements() {
@@ -25,11 +28,13 @@ export class IntermediateChildComponent extends SignalsProviderMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    const sharedSignals = this.signals;
-    // eslint-disable-next-line
-    console.log("sharedSignals:", sharedSignals);
-    this.testSignal2$ = this.signal(2);
-    this.signals = { ...sharedSignals, testSignal2$: this.testSignal2$ };
+    const sharedSignals = this.getSignals();
+    this.testSignal2$ = this.signal("Signal from Intermediate Child Component");
+    this.setSignals({ ...sharedSignals, testSignal2$: this.testSignal2$ });
+    this.mapStateToSignals({
+      signalValue1: sharedSignals.testSignal$,
+      signalValue2: this.testSignal2$,
+    });
   }
 
   disconnectedCallback() {
@@ -42,6 +47,8 @@ export class IntermediateChildComponent extends SignalsProviderMixin(
         Consuming shared signals from DIRECT parent component AND Providing
         shared signals to children
       </p>
+      <blockquote><code>Consumed: ${this.signalValue1}</code></blockquote>
+      <blockquote><code>Provided: ${this.signalValue2}</code></blockquote>
       <child-component></child-component> `;
   }
 

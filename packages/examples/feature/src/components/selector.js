@@ -19,7 +19,7 @@ export class SelectorComponent extends SignalsConsumerMixin(
 
   connectedCallback() {
     super.connectedCallback();
-    const { productFilter$, productOptions$, productsAPI$ } = this.signals;
+    const { productFilter$, productOptions$, productsAPI$ } = this.getSignals();
     this.productOptions$ = productOptions$;
     this.productFilter$ = productFilter$;
     this.mapStateToSignals({

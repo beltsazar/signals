@@ -33,10 +33,8 @@ export class FeatureMainComponent extends SignalsProviderMixin(
   async connectedCallback() {
     super.connectedCallback();
 
-    // get shared signals and provide them to child components using the consumer mixin
-    const sharedSignals = createSignals();
-    // set the shared signals on the provider mixin so that child components can consume them
-    this.signals = sharedSignals;
+    // set the shared signals on the provider mixin so that child components can consume them using consumer mixin
+    const sharedSignals = this.setSignals(createSignals());
 
     // local signal only in this element
     const counter$ = this.signal(0);

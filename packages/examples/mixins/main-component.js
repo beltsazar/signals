@@ -11,7 +11,9 @@ export class MainComponent extends SignalsProviderMixin(
   }
 
   static get properties() {
-    return {};
+    return {
+      signalValue: { type: String, state: true },
+    };
   }
 
   static get scopedElements() {
@@ -22,9 +24,9 @@ export class MainComponent extends SignalsProviderMixin(
 
   connectedCallback() {
     super.connectedCallback();
-
-    this.testSignal$ = this.signal(0);
-    this.signals = { testSignal$: this.testSignal$ };
+    this.testSignal$ = this.signal("Signal from Main Component");
+    this.setSignals({ testSignal$: this.testSignal$ });
+    this.mapStateToSignals({ signalValue: this.testSignal$ });
   }
 
   disconnectedCallback() {
@@ -34,6 +36,7 @@ export class MainComponent extends SignalsProviderMixin(
   render() {
     return html`<h1>Main Component</h1>
       <p>Providing shared signals to children</p>
+      <blockquote><code>Provided: ${this.signalValue}</code></blockquote>
       <intermediate-child-component></intermediate-child-component> `;
   }
 
