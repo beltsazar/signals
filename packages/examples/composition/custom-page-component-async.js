@@ -42,14 +42,10 @@ export class CustomPageComponentAsync extends PageComponent {
     return await this.getData();
   }
 
-  navigate() {
-    this.pageController$.navigate(this.pageController$.nextChild);
-  }
-
   render() {
     return html`<h2>${this.heading}</h2>
     ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}
     <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
-    <button @click="${() => this.navigate()}">Navigate Child Components</button>`;
+    <slot></slot>`;
   }
 }

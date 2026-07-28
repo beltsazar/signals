@@ -34,16 +34,9 @@ export class PageContainer extends SignalsProviderMixin(LitElement) {
     super.disconnectedCallback();
   }
 
-  navigate() {
-    this.pageController$.navigate(this.pageController$.nextChild);
-  }
-
   render() {
     return html`<h1>${this.heading}</h1>
       <p>number of children: ${this.pageController$.value.children.size}</p>
-      <button @click="${() => this.navigate()}">
-        Navigate Child Components
-      </button>
       <slot></slot> `;
   }
 

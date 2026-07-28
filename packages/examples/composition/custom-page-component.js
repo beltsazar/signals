@@ -56,16 +56,12 @@ export class CustomPageComponent extends PageComponent {
     this.validate();
   }
 
-  navigate() {
-    this.pageController$.navigate(this.pageController$.nextChild);
-  }
-
   render() {
     return html`<h2>${this.heading}</h2>
     ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}
     <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
     ${this.isValidationMessageShown ? html`<p><strong>Update state before going to next step!</strong></p>` : ""}
     <button @click="${() => this.updateState()}">Update State</button>
-    <button @click="${() => this.navigate()}">Navigate Child Components</button>`;
+    <slot></slot>`;
   }
 }
