@@ -6,8 +6,8 @@
  *
  */
 export function freezeDeep(object) {
-  // Intended early-return for undefined or non-object values.
-  if (!object || typeof object !== "object") {
+  // Intended early-return for undefined or non-object values or DOM objects
+  if (!object || typeof object !== "object" || object instanceof EventTarget) {
     return object;
   }
 

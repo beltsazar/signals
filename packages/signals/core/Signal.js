@@ -39,8 +39,11 @@ export class Signal {
     if (valueOrCallback && typeof valueOrCallback === "function") {
       // create a mutable copy of the new data object
       newValue = cloneDeep(currentValue);
-      // let consumer callback mutate this copy
-      valueOrCallback(newValue);
+      // let consumer callback mutate this copy or return a new value
+      const returnValue = valueOrCallback(newValue);
+      if (returnValue) {
+        newValue = returnValue;
+      }
     } else {
       newValue = valueOrCallback;
     }
