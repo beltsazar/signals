@@ -24,7 +24,12 @@ export const Default = {
                 heading="Custom page component"
               ></custom-page-component></page-component></page-component
         ></page-component>
-        <page-component heading="Page Component 3">Content ...</page-component>
+        <page-component heading="Page Component 3"
+          >Content ...
+          <custom-page-component-async
+            heading="Custom page component with async content"
+          ></custom-page-component-async>
+        </page-component>
         <page-component heading="Page Component 4">Content ...</page-component>
       </page-container>
     `;
