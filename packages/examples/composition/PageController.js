@@ -2,7 +2,10 @@ import { Signal } from "../../signals/index.js";
 
 const state = {
   children: new Set(),
-  activeChild: null,
+  navigation: {
+    activeChild: null,
+    isPending: false,
+  },
 };
 
 export class PageController extends Signal {
@@ -11,18 +14,18 @@ export class PageController extends Signal {
   }
 
   get activeChild() {
-    return this.value.activeChild;
+    return this.value.navigation.activeChild;
   }
 
   get nextChild() {
     const childrenArray = Array.from(this.value.children);
 
-    if (!this.value.activeChild && this.value.children.size > 0) {
+    if (!this.activeChild && this.value.children.size > 0) {
       return childrenArray[0];
     }
 
     const activeChildIndex = childrenArray.findIndex(
-      child => child === this.value.activeChild,
+      child => child === this.activeChild,
     );
     if (activeChildIndex < childrenArray.length - 1) {
       return childrenArray[activeChildIndex + 1];
@@ -30,15 +33,24 @@ export class PageController extends Signal {
     return childrenArray[0];
   }
 
-  navigate(targetChild) {
-    const isOnBeforeLeaving = this.activeChild
+  async navigate(targetChild) {
+    this.setValue(state => {
+      state.navigation.isPending = true;
+    });
+
+    const isOnBeforeLeaving = (await this.activeChild)
       ? this.activeChild.onBeforeLeaving()
       : true;
-    const isOnBeforeEntering = targetChild.onBeforeEntering();
+
+    const isOnBeforeEntering = await targetChild.onBeforeEntering();
 
     if (isOnBeforeLeaving && isOnBeforeEntering) {
       this.setActiveChildComponent(targetChild);
     }
+
+    this.setValue(state => {
+      state.navigation.isPending = false;
+    });
   }
 
   registerChildComponent(component) {
@@ -49,7 +61,7 @@ export class PageController extends Signal {
 
   setActiveChildComponent(component) {
     this.setValue(state => {
-      state.activeChild = component;
+      state.navigation.activeChild = component;
     });
   }
 }

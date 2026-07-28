@@ -5,12 +5,14 @@ export class PageComponent extends SignalsConsumerMixin(LitElement) {
   constructor() {
     super();
     this.isActive = false;
+    this.isBusy = false;
   }
 
   static get properties() {
     return {
       heading: { type: String },
       isActive: { type: Boolean, attribute: "is-active", reflect: true },
+      isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
     };
   }
 
@@ -28,7 +30,8 @@ export class PageComponent extends SignalsConsumerMixin(LitElement) {
 
     // watch pageController$ signal for changes to active child and update isActive property accordingly
     this.watch(this.pageController$, ({ value }) => {
-      this.isActive = value.activeChild === this;
+      this.isActive = value.navigation.activeChild === this;
+      this.isBusy = this.isActive && value.navigation.isPending;
       // other actions
     });
   }
@@ -65,6 +68,10 @@ export class PageComponent extends SignalsConsumerMixin(LitElement) {
       :host([is-active]) {
         padding: 16px;
         border: 3px solid red;
+      }
+
+      :host([is-busy]) {
+        opacity: 0.3;
       }
     `;
   }
