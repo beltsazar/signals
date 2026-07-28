@@ -21,7 +21,7 @@ describe("Signal", () => {
     expect(signal$.previousValue).to.equal(0);
   });
 
-  it("should clone objects matching original properties", () => {
+  it("should mutate cloned objects matching original properties", () => {
     const signal$ = new Signal(nested);
     expect(signal$.value === nested).to.equal(false);
     expect(signal$.value).to.deep.equal(nested);
@@ -29,6 +29,19 @@ describe("Signal", () => {
     signal$.setValue(value => {
       value.customer.name = "Another Customer";
     });
+    expect(signal$.value.customer.name).to.equal("Another Customer");
+    expect(signal$.previousValue).to.deep.equal(nested);
+  });
+
+  it("should return an object based on cloned original", () => {
+    const signal$ = new Signal(nested);
+    expect(signal$.value === nested).to.equal(false);
+    expect(signal$.value).to.deep.equal(nested);
+    expect(signal$.value.customer.name).to.deep.equal("Customer");
+    signal$.setValue(value => ({
+      ...value,
+      customer: { ...value.customer, name: "Another Customer" },
+    }));
     expect(signal$.value.customer.name).to.equal("Another Customer");
     expect(signal$.previousValue).to.deep.equal(nested);
   });
@@ -43,6 +56,22 @@ describe("Signal", () => {
       value.customer.name = "Another Customer";
     });
     expect(signal$.value === oldValue).to.not.equal(true);
+  });
+
+  it("should leave DOM objects alone :)", () => {
+    const domObject = new EventTarget();
+    const testObject = { test: "Me" };
+
+    const signal$ = new Signal({ domObject });
+    expect(signal$.value.domObject === domObject).to.be.true;
+    expect(Object.isFrozen(domObject)).to.be.false;
+
+    signal$.setValue(value => {
+      value.testObject = testObject;
+    });
+
+    expect(signal$.value.domObject === domObject).to.be.true;
+    expect(signal$.value.testObject === testObject).to.be.false;
   });
 
   it("should be immutable!!!", () => {
