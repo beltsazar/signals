@@ -60,18 +60,21 @@ describe("Signal", () => {
 
   it("should leave DOM objects alone :)", () => {
     const domObject = new EventTarget();
-    const testObject = { test: "Me" };
+    const dataObject = { test: "Me" };
 
     const signal$ = new Signal({ domObject });
     expect(signal$.value.domObject === domObject).to.be.true;
-    expect(Object.isFrozen(domObject)).to.be.false;
+    expect(Object.isFrozen(signal$.value.domObject)).to.be.false;
 
     signal$.setValue(value => {
-      value.testObject = testObject;
+      value.dataObject = dataObject;
     });
 
     expect(signal$.value.domObject === domObject).to.be.true;
-    expect(signal$.value.testObject === testObject).to.be.false;
+    expect(Object.isFrozen(signal$.value.domObject)).to.be.false;
+
+    expect(signal$.value.dataObject === dataObject).to.be.false;
+    expect(Object.isFrozen(signal$.value.dataObject)).to.be.true;
   });
 
   it("should be immutable!!!", () => {
