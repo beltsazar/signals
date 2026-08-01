@@ -32,6 +32,17 @@ export class Signal {
     this._watchers.delete(watcher);
   }
 
+  /**
+   * Set or mutate the observable value of the Signal. The function accepts a primitive value or a (nested) object, or a callback mutating a copy of the current value passed to the callback.
+   * Examples:
+   * setValue('value')
+   * setValue({ property: 'value' })
+   * setValue(value => {
+   *   value.property = 'newValue'; // mutate an existing property inside an object
+   * })
+   * setValue(value => ({...value, property: 'newValue'}) // same effect as above
+   * @param valueOrCallback
+   */
   setValue(valueOrCallback) {
     const currentValue = this.value;
     let newValue;
