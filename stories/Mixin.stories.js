@@ -1,10 +1,15 @@
 import { html } from "lit";
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 export default {
   title: "Examples/Mixins",
+};
+
+export const BasicUsageSignalsMixin = {
   render: () => html` <mixin-component></mixin-component> `,
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default = {};
+export const UsingContextProviderAndConsumer = {
+  render: () => html`
+    <mixin-inheritance-component></mixin-inheritance-component>
+  `,
+};

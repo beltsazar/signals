@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
-import { SignalsProviderMixin } from "../../signals/index.js";
+import { SignalsProviderMixin } from "../../../signals/index.js";
 import { IntermediateChildComponent } from "./intermediate-child-component.js";
 
 export class MainComponent extends SignalsProviderMixin(

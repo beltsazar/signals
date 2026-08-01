@@ -3,7 +3,7 @@ import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
 import {
   SignalsProviderMixin,
   SignalsConsumerMixin,
-} from "../../signals/index.js";
+} from "../../../signals/index.js";
 import { ChildComponent } from "./child-component.js";
 
 export class IntermediateChildComponent extends SignalsProviderMixin(

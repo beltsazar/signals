@@ -3,7 +3,7 @@ import { Signal } from "../core/Signal.js";
 import { ComputedSignal } from "../core/ComputedSignal.js";
 import { Watcher } from "../core/Watcher.js";
 
-export const SignalsBaseMixin = superClass =>
+export const SignalsMixin = superClass =>
   class extends superClass {
     #computedSignals = [];
     #watchers = [];

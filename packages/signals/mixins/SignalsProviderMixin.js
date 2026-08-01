@@ -1,9 +1,9 @@
 import { ContextProvider } from "@lit/context";
 import { context } from "./signals-context.js";
-import { SignalsBaseMixin } from "./SignalsBaseMixin.js";
+import { SignalsMixin } from "./SignalsMixin.js";
 
 export const SignalsProviderMixin = superClass =>
-  class extends SignalsBaseMixin(superClass) {
+  class extends SignalsMixin(superClass) {
     #contextProvider = new ContextProvider(this, { context });
     #sharedSignals = {};
 
