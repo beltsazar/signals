@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { SignalsProviderMixin, isEqual } from "../../../signals/index.js";
-import { PageController } from "./PageController.js";
+import { FlowPagesController } from "./FlowPagesController.js";
 
-export class PageContainer extends SignalsProviderMixin(LitElement) {
-  pageController$ = new PageController(this);
+export class FlowPages extends SignalsProviderMixin(LitElement) {
+  pageController$ = new FlowPagesController(this);
   state$;
 
   constructor() {

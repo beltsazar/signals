@@ -1,7 +1,7 @@
 import { html } from "lit";
-import { PageComponent } from "./page-component/page-component.js";
+import { FlowPage } from "./flow/flow-page.js";
 
-export class CustomPageComponentAsync extends PageComponent {
+export class CustomFlowPageAsync extends FlowPage {
   constructor() {
     super();
   }

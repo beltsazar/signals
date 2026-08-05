@@ -6,7 +6,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Pages = {
+export const PageFlow = {
   render: () => {
     const state = {
       user: "John Doe",
@@ -14,33 +14,32 @@ export const Pages = {
     };
 
     return html`
-      <page-container heading="Page Container" .state=${state}>
-        <next-page-button label="Next Page"></next-page-button>
-        <page-component heading="Page Component 1">Content ...</page-component>
-        <page-component heading="Page Component 2"
-          >Content ...<page-component heading="Page Component 3 nested inside 2"
-            >Content...<page-component
-              heading="Page Component 4 nested inside 3"
-              >Content...<custom-page-component heading="Custom page component"
-                ><next-page-button
+      <flow-pages heading="Page Container" .state=${state}>
+        <flow-next-page-button label="Next Page"></flow-next-page-button>
+        <flow-page heading="Page Component 1">Content ...</flow-page>
+        <flow-page heading="Page Component 2"
+          >Content ...<flow-page heading="Page Component 3 nested inside 2"
+            >Content...<flow-page heading="Page Component 4 nested inside 3"
+              >Content...<custom-flow-page heading="Custom page component"
+                ><flow-next-page-button
                   label="Next Page"
-                ></next-page-button></custom-page-component></page-component></page-component
-        ></page-component>
-        <page-component heading="Page Component 3"
+                ></flow-next-page-button></custom-flow-page></flow-page></flow-page
+        ></flow-page>
+        <flow-page heading="Page Component 3"
           >Content ...
-          <custom-page-component-async
+          <custom-flow-page-async
             heading="Custom page component with async content"
-            ><next-page-button label="Next Page"></next-page-button
-          ></custom-page-component-async>
-        </page-component>
-        <page-component heading="Page Component 4">Content ...</page-component>
-      </page-container>
+            ><flow-next-page-button label="Next Page"></flow-next-page-button
+          ></custom-flow-page-async>
+        </flow-page>
+        <flow-page heading="Page Component 4">Content ...</flow-page>
+      </flow-pages>
     `;
   },
 };
 
-export const IntegratedPages = {
+export const AdvancedPageFlow = {
   render: () => {
-    return html`<page-demo></page-demo>`;
+    return html`<flow-demo></flow-demo>`;
   },
 };

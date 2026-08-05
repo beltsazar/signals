@@ -6,6 +6,7 @@
   "main": "packages/signals/index.js",
   "type": "module",
   "scripts": {
+    "start": "npm run storybook",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

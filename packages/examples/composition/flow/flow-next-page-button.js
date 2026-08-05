@@ -1,7 +1,7 @@
 import { css, html } from "lit";
-import { PageElement } from "./page-element.js";
+import { FlowComponent } from "./flow-component.js";
 
-export class NextPageButton extends PageElement {
+export class FlowNextPageButton extends FlowComponent {
   constructor() {
     super();
   }

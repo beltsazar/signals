@@ -8,7 +8,7 @@ const state = {
   },
 };
 
-export class PageController extends Signal {
+export class FlowPagesController extends Signal {
   constructor() {
     super(state);
   }

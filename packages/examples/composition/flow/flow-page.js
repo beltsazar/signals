@@ -1,7 +1,7 @@
-import { LitElement, css, html } from "lit";
-import { SignalsConsumerMixin } from "../../../signals/index.js";
+import { css, html } from "lit";
+import { FlowComponent } from "./flow-component.js";
 
-export class PageComponent extends SignalsConsumerMixin(LitElement) {
+export class FlowPage extends FlowComponent {
   constructor() {
     super();
     this.isActive = false;
@@ -18,12 +18,6 @@ export class PageComponent extends SignalsConsumerMixin(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    // get shared signals
-    const { pageController$, state$ } = this.getSignals();
-
-    // put signals on the element scope
-    this.pageController$ = pageController$;
-    this.state$ = state$;
 
     // register this component with the page controller so that it can be managed by the controller
     this.pageController$.registerChildComponent(this);
