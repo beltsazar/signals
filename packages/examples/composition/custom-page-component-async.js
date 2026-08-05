@@ -1,5 +1,5 @@
 import { html } from "lit";
-import { PageComponent } from "./page-component.js";
+import { PageComponent } from "./page-component/page-component.js";
 
 export class CustomPageComponentAsync extends PageComponent {
   constructor() {

@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "lit";
-import { SignalsConsumerMixin } from "../../signals/index.js";
+import { SignalsConsumerMixin } from "../../../signals/index.js";
 
 export class PageComponent extends SignalsConsumerMixin(LitElement) {
   constructor() {

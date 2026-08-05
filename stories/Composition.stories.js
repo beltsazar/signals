@@ -6,7 +6,7 @@ export default {
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default = {
+export const Pages = {
   render: () => {
     const state = {
       user: "John Doe",
@@ -14,7 +14,7 @@ export const Default = {
     };
 
     return html`
-      <page-container heading="Page Container" .initialState=${state}>
+      <page-container heading="Page Container" .state=${state}>
         <next-page-button label="Next Page"></next-page-button>
         <page-component heading="Page Component 1">Content ...</page-component>
         <page-component heading="Page Component 2"
@@ -36,5 +36,11 @@ export const Default = {
         <page-component heading="Page Component 4">Content ...</page-component>
       </page-container>
     `;
+  },
+};
+
+export const IntegratedPages = {
+  render: () => {
+    return html`<page-demo></page-demo>`;
   },
 };

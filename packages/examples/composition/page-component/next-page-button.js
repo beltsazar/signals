@@ -1,7 +1,7 @@
-import { LitElement, css, html } from "lit";
-import { SignalsConsumerMixin } from "../../signals/index.js";
+import { css, html } from "lit";
+import { PageElement } from "./page-element.js";
 
-export class NextPageButton extends SignalsConsumerMixin(LitElement) {
+export class NextPageButton extends PageElement {
   constructor() {
     super();
   }
@@ -15,11 +15,6 @@ export class NextPageButton extends SignalsConsumerMixin(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    // get shared signals
-    const { pageController$ } = this.getSignals();
-    // put signals on the element scope
-    this.pageController$ = pageController$;
-    // watch pageController$ signal for changes to active child and update isActive property accordingly
     this.mapStateToSignals({
       isBusy: this.computed(this.pageController$, ({ value }) => {
         this.isBusy = value.navigation.isPending;

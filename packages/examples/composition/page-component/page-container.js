@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "lit";
-import { SignalsProviderMixin } from "../../signals/index.js";
+import { SignalsProviderMixin, isEqual } from "../../../signals/index.js";
 import { PageController } from "./PageController.js";
 
 export class PageContainer extends SignalsProviderMixin(LitElement) {
@@ -9,24 +9,47 @@ export class PageContainer extends SignalsProviderMixin(LitElement) {
   constructor() {
     super();
     this.state = {};
-    this.childrenCount = 0;
+    this.test = {};
   }
 
   static get properties() {
     return {
       heading: { type: String },
-      initialState: { type: Object },
+      state: { type: Object },
+      test: { type: Object },
     };
+  }
+
+  /**
+   * Update the internal state if it is different with an updated state from the consumer, consumer state is leading
+   * @param changedProperties
+   */
+  updated(changedProperties) {
+    if (
+      changedProperties.has("state") &&
+      !isEqual(this.state, this.state$.value)
+    ) {
+      this.state$.setValue(this.state);
+    }
   }
 
   async connectedCallback() {
     super.connectedCallback();
     // create a signal based on initial state passed to the component, this will be used to manage the state of the page container and its children
-    this.state$ = this.signal(this.initialState);
+    this.state$ = this.signal(this.state);
     // share signals with children
     this.setSignals({
       state$: this.state$,
       pageController$: this.pageController$,
+    });
+    this.watch(this.state$, () => {
+      this.dispatchEvent(
+        new CustomEvent("state-updated", {
+          detail: {
+            state: this.state$.value,
+          },
+        }),
+      );
     });
   }
 
