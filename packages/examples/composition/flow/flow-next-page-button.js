@@ -16,7 +16,7 @@ export class FlowNextPageButton extends FlowComponent {
   connectedCallback() {
     super.connectedCallback();
     this.mapStateToSignals({
-      isBusy: this.computed(this.pageController$, ({ value }) => {
+      isBusy: this.computed(this.flowController$, ({ value }) => {
         this.isBusy = value.navigation.isPending;
       }),
     });
@@ -27,7 +27,7 @@ export class FlowNextPageButton extends FlowComponent {
   }
 
   nextPage() {
-    this.pageController$.navigate(this.pageController$.nextChild);
+    this.flowController$.navigate(this.flowController$.nextPage);
   }
 
   render() {

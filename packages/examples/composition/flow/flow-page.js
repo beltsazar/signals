@@ -1,7 +1,15 @@
-import { css, html } from "lit";
-import { FlowComponent } from "./flow-component.js";
+import { LitElement, css, html } from "lit";
+import {
+  SignalsProviderMixin,
+  SignalsConsumerMixin,
+} from "../../../signals/index.js";
+import { PageController } from "./PageController.js";
 
-export class FlowPage extends FlowComponent {
+export class FlowPage extends SignalsProviderMixin(
+  SignalsConsumerMixin(LitElement),
+) {
+  pageController$ = new PageController(this);
+
   constructor() {
     super();
     this.isActive = false;
@@ -18,15 +26,37 @@ export class FlowPage extends FlowComponent {
 
   connectedCallback() {
     super.connectedCallback();
+    const {
+      flowController$,
+      pageController$: parentPageController$,
+      state$,
+    } = this.getSignals();
 
-    // register this component with the page controller so that it can be managed by the controller
-    this.pageController$.registerChildComponent(this);
+    this.setSignals({
+      pageController$: this.pageController$,
+      flowController$,
+      state$,
+    });
 
-    // watch pageController$ signal for changes to active child and update isActive property accordingly
-    this.watch(this.pageController$, ({ value }) => {
-      this.isActive = value.navigation.activeChild === this;
-      this.isBusy = this.isActive && value.navigation.isPending;
-      // other actions
+    this.flowController$ = flowController$;
+
+    // register this component with the flow controller so that it can be managed by the controller
+    if (parentPageController$) {
+      parentPageController$.registerPage(this);
+    } else {
+      this.flowController$.registerPage(this);
+    }
+
+    // watch flowController$ signal for changes to active page and update local properties
+    this.watch(this.flowController$, ({ value: flowController }) => {
+      this.isActive = flowController.navigation.activePage === this;
+      this.isBusy = this.isActive && flowController.navigation.isPending;
+
+      // also update reactive state for child components
+      this.pageController$.setValue(value => {
+        value.isActive = this.isActive;
+        value.isBusy = this.isBusy;
+      });
     });
   }
 
@@ -34,14 +64,26 @@ export class FlowPage extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  onBeforeLeaving() {
-    return true;
+  async onBeforeLeaving() {
+    const onBeforeLeaving = [];
+    this.pageController$.components.forEach(component => {
+      if (component.onBeforeLeaving) {
+        onBeforeLeaving.push(component.onBeforeLeaving?.());
+      }
+    });
+    await Promise.all(onBeforeLeaving);
+    return onBeforeLeaving.every(value => value);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  onBeforeEntering() {
-    return true;
+  async onBeforeEntering() {
+    const onBeforeEntering = [];
+    this.pageController$.components.forEach(component => {
+      if (component.onBeforeEntering) {
+        onBeforeEntering.push(component.onBeforeEntering?.());
+      }
+    });
+    await Promise.all(onBeforeEntering);
+    return onBeforeEntering.every(value => value);
   }
 
   render() {

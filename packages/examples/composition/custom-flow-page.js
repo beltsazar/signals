@@ -1,7 +1,7 @@
-import { html } from "lit";
-import { FlowPage } from "./flow/flow-page.js";
+import { css, html } from "lit";
+import { FlowComponent } from "./flow/flow-component.js";
 
-export class CustomFlowPage extends FlowPage {
+export class CustomFlowPage extends FlowComponent {
   constructor() {
     super();
   }
@@ -63,5 +63,15 @@ export class CustomFlowPage extends FlowPage {
     ${this.isValidationMessageShown ? html`<p><strong>Update state before going to next step!</strong></p>` : ""}
     <button @click="${() => this.updateState()}">Update State</button>
     <slot></slot>`;
+  }
+
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        padding: 16px;
+        border: 1px dotted #000;
+      }
+    `;
   }
 }

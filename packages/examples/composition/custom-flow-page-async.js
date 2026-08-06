@@ -1,7 +1,7 @@
-import { html } from "lit";
-import { FlowPage } from "./flow/flow-page.js";
+import { css, html } from "lit";
+import { FlowComponent } from "./flow/flow-component.js";
 
-export class CustomFlowPageAsync extends FlowPage {
+export class CustomFlowPageAsync extends FlowComponent {
   constructor() {
     super();
   }
@@ -39,7 +39,8 @@ export class CustomFlowPageAsync extends FlowPage {
   }
 
   async onBeforeEntering() {
-    return await this.getData();
+    await this.getData();
+    return true;
   }
 
   render() {
@@ -47,5 +48,15 @@ export class CustomFlowPageAsync extends FlowPage {
     ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}
     <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
     <slot></slot>`;
+  }
+
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        padding: 16px;
+        border: 1px dotted #000;
+      }
+    `;
   }
 }

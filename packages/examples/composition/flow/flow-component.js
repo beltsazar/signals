@@ -9,9 +9,14 @@ export class FlowComponent extends SignalsConsumerMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     // get shared signals
-    const { pageController$, state$ } = this.getSignals();
+    const { flowController$, pageController$, state$ } = this.getSignals();
+
+    if (pageController$) {
+      pageController$.registerComponent(this);
+    }
 
     // put signals on the element scope
+    this.flowController$ = flowController$;
     this.pageController$ = pageController$;
     this.state$ = state$;
   }

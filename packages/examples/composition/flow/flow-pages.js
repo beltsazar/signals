@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { SignalsProviderMixin, isEqual } from "../../../signals/index.js";
-import { FlowPagesController } from "./FlowPagesController.js";
+import { FlowController } from "./FlowController.js";
 
 export class FlowPages extends SignalsProviderMixin(LitElement) {
-  pageController$ = new FlowPagesController(this);
+  flowController$ = new FlowController(this);
   state$;
 
   constructor() {
@@ -40,7 +40,7 @@ export class FlowPages extends SignalsProviderMixin(LitElement) {
     // share signals with children
     this.setSignals({
       state$: this.state$,
-      pageController$: this.pageController$,
+      flowController$: this.flowController$,
     });
     this.watch(this.state$, () => {
       this.dispatchEvent(
@@ -51,6 +51,8 @@ export class FlowPages extends SignalsProviderMixin(LitElement) {
         }),
       );
     });
+
+    await this.updateComplete;
   }
 
   disconnectedCallback() {
@@ -59,7 +61,7 @@ export class FlowPages extends SignalsProviderMixin(LitElement) {
 
   render() {
     return html`<h1>${this.heading}</h1>
-      <p>number of children: ${this.pageController$.value.children.size}</p>
+      <p>number of pages: ${this.flowController$.value.pages.size}</p>
       <slot></slot> `;
   }
 
