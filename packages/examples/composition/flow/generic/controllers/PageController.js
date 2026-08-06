@@ -1,4 +1,4 @@
-import { Signal } from "../../../signals/index.js";
+import { Signal } from "../../../../../signals/index.js";
 
 const state = {
   pages: new Set(),

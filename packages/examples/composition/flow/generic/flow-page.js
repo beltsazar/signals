@@ -2,8 +2,8 @@ import { LitElement, css, html } from "lit";
 import {
   SignalsProviderMixin,
   SignalsConsumerMixin,
-} from "../../../signals/index.js";
-import { PageController } from "./PageController.js";
+} from "../../../../signals/index.js";
+import { PageController } from "./controllers/PageController.js";
 
 export class FlowPage extends SignalsProviderMixin(
   SignalsConsumerMixin(LitElement),

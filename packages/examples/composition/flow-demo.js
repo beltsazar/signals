@@ -1,10 +1,10 @@
 import { LitElement, css, html } from "lit";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
-import { FlowPages } from "./flow/flow-pages.js";
-import { FlowPage } from "./flow/flow-page.js";
-import { CustomFlowPage } from "./custom-flow-page.js";
-import { CustomFlowPageAsync } from "./custom-flow-page-async.js";
-import { FlowNextPageButton } from "./flow/flow-next-page-button.js";
+import { FlowPages } from "./flow/generic/flow-pages.js";
+import { FlowPage } from "./flow/generic/flow-page.js";
+import { CustomFlowComponent } from "./custom-flow-component.js";
+import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
+import { FlowNextPageButton } from "./flow/generic/flow-next-page-button.js";
 
 export class FlowDemo extends ScopedElementsMixin(LitElement) {
   constructor() {
@@ -26,8 +26,8 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
       "flow-pages": FlowPages,
       "flow-page": FlowPage,
       "flow-next-page-button": FlowNextPageButton,
-      "custom-flow-page": CustomFlowPage,
-      "custom-flow-page-async": CustomFlowPageAsync,
+      "custom-flow-component": CustomFlowComponent,
+      "custom-flow-component-async": CustomFlowComponentAsync,
     };
   }
 
@@ -59,17 +59,17 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
           >Content ...<flow-page heading="Page 3 nested inside page 2"
             >Content...<flow-page
               heading="Page 4 nested inside 3"
-              >Content...<custom-flow-page heading="Custom page"
+              >Content...<custom-flow-component heading="Custom page"
                 ><flow-next-page-button
                   label="Next Page"
-                ></flow-next-page-button></custom-flow-page></flow-page></flow-page
+                ></flow-next-page-button></custom-flow-component></flow-page></flow-page
         ></flow-page>
         <flow-page heading="Page 5"
           >Content ...
-          <custom-flow-page-async
+          <custom-flow-component-async
             heading="Custom page with async content"
             ><flow-next-page-button label="Next Page"></flow-next-page-button
-          ></custom-flow-page-async>
+          ></custom-flow-component-async>
         </flow-page>
         <flow-page heading="Page 6">Content ...</flow-page>
       </flow-pages>

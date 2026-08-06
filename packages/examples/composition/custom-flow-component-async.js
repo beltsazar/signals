@@ -1,13 +1,12 @@
 import { css, html } from "lit";
-import { FlowComponent } from "./flow/flow-component.js";
+import { FlowComponent } from "./flow/generic/flow-component.js";
 
-export class CustomFlowPageAsync extends FlowComponent {
+export class CustomFlowComponentAsync extends FlowComponent {
   constructor() {
     super();
   }
 
   static properties = {
-    ...super.properties,
     state: { type: Boolean, state: true },
   };
 

@@ -1,15 +1,15 @@
 import { css, html } from "lit";
-import { FlowComponent } from "./flow/flow-component.js";
+import { FlowComponent } from "./flow/generic/flow-component.js";
 
-export class CustomFlowPage extends FlowComponent {
+export class CustomFlowComponent extends FlowComponent {
   constructor() {
     super();
   }
 
   static properties = {
-    ...super.properties,
     state: { type: Boolean, state: true },
-    isValidationMessageShown: { type: Boolean },
+    isValidationMessageShown: { type: Boolean, state: true },
+    isActive: { type: Boolean, state: true },
   };
 
   connectedCallback() {
@@ -26,6 +26,10 @@ export class CustomFlowPage extends FlowComponent {
       isValidationMessageShown: this.computed(
         this.validation$,
         ({ value }) => value.isValidated && !value.isValid,
+      ),
+      isActive: this.computed(
+        this.pageController$,
+        ({ value }) => value.isActive,
       ),
     });
   }

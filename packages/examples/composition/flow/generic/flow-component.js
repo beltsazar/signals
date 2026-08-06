@@ -1,5 +1,5 @@
 import { LitElement } from "lit";
-import { SignalsConsumerMixin } from "../../../signals/index.js";
+import { SignalsConsumerMixin } from "../../../../signals/index.js";
 
 export class FlowComponent extends SignalsConsumerMixin(LitElement) {
   constructor() {
