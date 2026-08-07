@@ -86,6 +86,17 @@ export class FlowPage extends SignalsProviderMixin(
     return onBeforeEntering.every(value => value);
   }
 
+  async onAfterEntering() {
+    const onAfterEntering = [];
+    this.pageController$.components.forEach(component => {
+      if (component.onAfterEntering) {
+        onAfterEntering.push(component.onAfterEntering?.());
+      }
+    });
+    await Promise.all(onAfterEntering);
+    return onAfterEntering.every(value => value);
+  }
+
   render() {
     return html`<div>
       <h2>${this.heading}</h2>
@@ -102,6 +113,7 @@ export class FlowPage extends SignalsProviderMixin(
       }
 
       :host([is-active]) {
+        //display: block;
         padding: 16px;
         border: 3px solid red;
       }

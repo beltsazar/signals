@@ -1,5 +1,5 @@
 import { css, html } from "lit";
-import { FlowComponent } from "./flow/generic/flow-component.js";
+import { FlowComponent } from "../generic/flow-component.js";
 
 export class CustomFlowComponentAsync extends FlowComponent {
   constructor() {

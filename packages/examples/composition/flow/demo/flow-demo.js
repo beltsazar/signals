@@ -1,10 +1,10 @@
 import { LitElement, css, html } from "lit";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
-import { FlowPages } from "./flow/generic/flow-pages.js";
-import { FlowPage } from "./flow/generic/flow-page.js";
+import { FlowPages } from "../generic/flow-pages.js";
+import { FlowPage } from "../generic/flow-page.js";
 import { CustomFlowComponent } from "./custom-flow-component.js";
 import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
-import { FlowNextPageButton } from "./flow/generic/flow-next-page-button.js";
+import { FlowNextPageButton } from "../generic/flow-next-page-button.js";
 
 export class FlowDemo extends ScopedElementsMixin(LitElement) {
   constructor() {
@@ -50,28 +50,28 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
 
   render() {
     return html`
-      <flow-pages heading="Page Flow" .state=${this.state} @state-updated="${e => this.updateState(e)}">
+      <flow-pages active-page-id="1" heading="Page Flow" .state=${this.state} @state-updated="${e => this.updateState(e)}">
         <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
         <button @click="${this.addProfession}">Add Profession</button>
         <flow-next-page-button label="Next Page"></flow-next-page-button>
-        <flow-page heading="Page 1">Content ...</flow-page>
-        <flow-page heading="Page 2"
-          >Content ...<flow-page heading="Page 3 nested inside page 2"
-            >Content...<flow-page
+        <flow-page id="1" heading="Page 1">Content ...</flow-page>
+        <flow-page id="2" heading="Page 2"
+          >Content ...<flow-page id="3" heading="Page 3 nested inside page 2"
+            >Content...<flow-page id="4"
               heading="Page 4 nested inside 3"
               >Content...<custom-flow-component heading="Custom page"
                 ><flow-next-page-button
                   label="Next Page"
                 ></flow-next-page-button></custom-flow-component></flow-page></flow-page
         ></flow-page>
-        <flow-page heading="Page 5"
+        <flow-page id="5" heading="Page 5"
           >Content ...
           <custom-flow-component-async
             heading="Custom page with async content"
             ><flow-next-page-button label="Next Page"></flow-next-page-button
           ></custom-flow-component-async>
         </flow-page>
-        <flow-page heading="Page 6">Content ...</flow-page>
+        <flow-page id="1" heading="Page 6">Content ...</flow-page>
       </flow-pages>
     `;
   }

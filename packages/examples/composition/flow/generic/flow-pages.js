@@ -9,14 +9,14 @@ export class FlowPages extends SignalsProviderMixin(LitElement) {
   constructor() {
     super();
     this.state = {};
-    this.test = {};
+    this.activePageId = null;
   }
 
   static get properties() {
     return {
+      activePageId: { type: String, attribute: "active-page-id" },
       heading: { type: String },
       state: { type: Object },
-      test: { type: Object },
     };
   }
 
@@ -52,7 +52,15 @@ export class FlowPages extends SignalsProviderMixin(LitElement) {
       );
     });
 
+    // wait for child components to complete initialization
     await this.updateComplete;
+
+    // navigate to start page
+    if (this.activePageId) {
+      await this.flowController$.navigate(
+        this.flowController$.getPageById(this.activePageId),
+      );
+    }
   }
 
   disconnectedCallback() {

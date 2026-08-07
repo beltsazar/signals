@@ -4,9 +4,9 @@ import { MainComponent } from "../packages/examples/mixins/context/main-componen
 import { FlowPages } from "../packages/examples/composition/flow/generic/flow-pages.js";
 import { FlowPage } from "../packages/examples/composition/flow/generic/flow-page.js";
 import { FlowNextPageButton } from "../packages/examples/composition/flow/generic/flow-next-page-button.js";
-import { CustomFlowComponent } from "../packages/examples/composition/custom-flow-component.js";
-import { CustomFlowComponentAsync } from "../packages/examples/composition/custom-flow-component-async.js";
-import { FlowDemo } from "../packages/examples/composition/flow-demo.js";
+import { CustomFlowComponent } from "../packages/examples/composition/flow/demo/custom-flow-component.js";
+import { CustomFlowComponentAsync } from "../packages/examples/composition/flow/demo/custom-flow-component-async.js";
+import { FlowDemo } from "../packages/examples/composition/flow/demo/flow-demo.js";
 
 window.customElements.define("feature-component", FeatureMainComponent);
 window.customElements.define("mixin-component", MixinComponent);

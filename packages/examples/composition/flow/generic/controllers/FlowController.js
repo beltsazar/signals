@@ -21,7 +21,7 @@ export class FlowController extends Signal {
     return this.value.navigation.activePage;
   }
 
-  get sequentialPages() {
+  get flattenedPages() {
     function getPages(pages, accumulator = []) {
       pages.forEach(page => {
         accumulator.push(page);
@@ -35,17 +35,21 @@ export class FlowController extends Signal {
   }
 
   get nextPage() {
-    if (!this.activePage && this.value.pages.size > 0) {
-      return this.sequentialPages[0];
+    // if no active page, start with the first
+    if (!this.activePage && this.pages.size > 0) {
+      return this.flattenedPages[0];
     }
 
-    const activePageIndex = this.sequentialPages.findIndex(
+    // find the current active page
+    const activePageIndex = this.flattenedPages.findIndex(
       page => page === this.activePage,
     );
-    if (activePageIndex < this.sequentialPages.length - 1) {
-      return this.sequentialPages[activePageIndex + 1];
+
+    // if the active page is the last in the sequence, start with the first one
+    if (activePageIndex < this.flattenedPages.length - 1) {
+      return this.flattenedPages[activePageIndex + 1];
     }
-    return this.sequentialPages[0];
+    return this.flattenedPages[0];
   }
 
   async navigate(targetPage) {
@@ -70,9 +74,16 @@ export class FlowController extends Signal {
       this.setActivePage(targetPage);
     }
 
+    // targetPage is now activePage !!!
+    this.activePage.onAfterEntering();
+
     this.setValue(state => {
       state.navigation.isPending = false;
     });
+  }
+
+  getPageById(id) {
+    return this.flattenedPages.find(page => page.id === id);
   }
 
   setActivePage(component) {

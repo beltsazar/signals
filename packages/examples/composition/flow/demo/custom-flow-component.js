@@ -1,7 +1,10 @@
 import { css, html } from "lit";
-import { FlowComponent } from "./flow/generic/flow-component.js";
+import { ref, createRef } from "lit/directives/ref.js";
+import { FlowComponent } from "../generic/flow-component.js";
 
 export class CustomFlowComponent extends FlowComponent {
+  buttonRef = createRef();
+
   constructor() {
     super();
   }
@@ -49,6 +52,15 @@ export class CustomFlowComponent extends FlowComponent {
     return isValid;
   }
 
+  firstUpdated() {
+    this.onAfterEntering();
+  }
+
+  onAfterEntering() {
+    const button = this.buttonRef.value;
+    button.focus();
+  }
+
   onBeforeLeaving() {
     return this.validate();
   }
@@ -65,7 +77,7 @@ export class CustomFlowComponent extends FlowComponent {
     ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}
     <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
     ${this.isValidationMessageShown ? html`<p><strong>Update state before going to next step!</strong></p>` : ""}
-    <button @click="${() => this.updateState()}">Update State</button>
+    <button ${ref(this.buttonRef)} @click="${() => this.updateState()}">Update State</button>
     <slot></slot>`;
   }
 
