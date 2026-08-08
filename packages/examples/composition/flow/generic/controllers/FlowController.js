@@ -74,9 +74,6 @@ export class FlowController extends Signal {
       this.setActivePage(targetPage);
     }
 
-    // targetPage is now activePage !!!
-    this.activePage.onAfterEntering();
-
     this.setValue(state => {
       state.navigation.isPending = false;
     });

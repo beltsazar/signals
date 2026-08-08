@@ -54,24 +54,24 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
         <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
         <button @click="${this.addProfession}">Add Profession</button>
         <flow-next-page-button label="Next Page"></flow-next-page-button>
-        <flow-page id="1" heading="Page 1"><div slot="content">Slotted Content ...</div></flow-page>
+        <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
         <flow-page id="2" heading="Page 2"
-          ><div slot="content">Slotted Content ...</div><div slot="pages"><flow-page id="3" heading="Page 3 nested inside page 2"
-            ><div slot="content">Slotted Content ...</div><div slot="pages"><flow-page id="4"
+          >Slotted Content ...<div slot="pages"><flow-page id="3" heading="Page 3 nested inside page 2"
+            >Slotted Content ...<div slot="pages"><flow-page id="4"
               heading="Page 4 nested inside 3"
-              ><div slot="content">Slotted Content ...<custom-flow-component heading="Custom page"
+              >Slotted Content ...<custom-flow-component heading="Custom page"
                 ><flow-next-page-button
                   label="Next Page"
                 ></flow-next-page-button></custom-flow-component></div></flow-page></div></flow-page
-        ></div></flow-page>
+        ></flow-page>
         <flow-page id="5" heading="Page 5"
-          ><div slot="content">Slotted Content ...
+          >Slotted Content ...
           <custom-flow-component-async
             heading="Custom page with async content"
             ><flow-next-page-button label="Next Page"></flow-next-page-button
-          ></custom-flow-component-async></div>
+          ></custom-flow-component-async>
         </flow-page>
-        <flow-page id="1" heading="Page 6"><div slot="content">Slotted Content ...</div></flow-page>
+        <flow-page id="1" heading="Page 6">Slotted Content ...</flow-page>
       </flow-pages>
     `;
   }

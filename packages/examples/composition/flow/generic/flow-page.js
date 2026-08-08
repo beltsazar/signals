@@ -97,6 +97,13 @@ export class FlowPage extends SignalsProviderMixin(
     }
   }
 
+  // when page becomes visible, fire activation hook
+  async updated(changedProperties) {
+    if (changedProperties.has("isActive") && this.isActive) {
+      await this.onActivation();
+    }
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
   }
@@ -123,15 +130,11 @@ export class FlowPage extends SignalsProviderMixin(
     return onBeforeEntering.every(value => value);
   }
 
-  async onAfterEntering() {
-    const onAfterEntering = [];
+  // Page has become visible and ready for user interaction or DOM manipulation
+  async onActivation() {
     this.pageController$.components.forEach(component => {
-      if (component.onAfterEntering) {
-        onAfterEntering.push(component.onAfterEntering?.());
-      }
+      component.onActivation?.();
     });
-    await Promise.all(onAfterEntering);
-    return onAfterEntering.every(value => value);
   }
 
   render() {
@@ -139,7 +142,7 @@ export class FlowPage extends SignalsProviderMixin(
       ${
         this.isActive
           ? html`<h2>${this.heading}</h2>
-              <slot name="content"></slot>`
+              <slot></slot>`
           : ""
       }
       <slot name="pages"></slot>
