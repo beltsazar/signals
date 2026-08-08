@@ -98,9 +98,9 @@ export class FlowPage extends SignalsProviderMixin(
   }
 
   // when page becomes visible, fire activation hook
-  async updated(changedProperties) {
+  updated(changedProperties) {
     if (changedProperties.has("isActive") && this.isActive) {
-      await this.onActivation();
+      this.onActivation();
     }
   }
 
@@ -131,7 +131,7 @@ export class FlowPage extends SignalsProviderMixin(
   }
 
   // Page has become visible and ready for user interaction or DOM manipulation
-  async onActivation() {
+  onActivation() {
     this.pageController$.components.forEach(component => {
       component.onActivation?.();
     });
