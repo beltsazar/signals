@@ -14,17 +14,23 @@ export class FlowPage extends SignalsProviderMixin(
     super();
     this.isActive = false;
     this.isBusy = false;
+    this.hasActiveChildPage = false;
   }
 
   static get properties() {
     return {
       heading: { type: String },
       isActive: { type: Boolean, attribute: "is-active", reflect: true },
+      hasActiveChildPage: {
+        type: Boolean,
+        attribute: "has-active-child-page",
+        reflect: true,
+      },
       isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
     };
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
     const {
       flowController$,
@@ -47,17 +53,48 @@ export class FlowPage extends SignalsProviderMixin(
       this.flowController$.registerPage(this);
     }
 
+    this.mapStateToSignals({
+      isActive: this.computed(
+        this.pageController$,
+        ({ value }) => value.isActive,
+      ),
+      hasActiveChildPage: this.computed(
+        this.pageController$,
+        ({ value }) => value.hasActiveChildPage,
+      ),
+      isBusy: this.computed(this.pageController$, ({ value }) => value.isBusy),
+    });
+
     // watch flowController$ signal for changes to active page and update local properties
     this.watch(this.flowController$, ({ value: flowController }) => {
-      this.isActive = flowController.navigation.activePage === this;
-      this.isBusy = this.isActive && flowController.navigation.isPending;
-
       // also update reactive state for child components
       this.pageController$.setValue(value => {
-        value.isActive = this.isActive;
-        value.isBusy = this.isBusy;
+        const isActive = flowController.navigation.activePage === this;
+        value.isActive = isActive;
+        value.isBusy = isActive && flowController.navigation.isPending;
       });
     });
+
+    // wait for child components to complete initialization
+    await this.updateComplete;
+
+    if (this.pageController$.pages.size > 0) {
+      const childPageControllers = Array.from(this.pageController$.pages).map(
+        page => page.pageController$,
+      );
+
+      this.watch([...childPageControllers], childPageController$ => {
+        this.pageController$.setValue(value => {
+          value.hasActiveChildPage = childPageController$
+            .map(
+              controller =>
+                controller.value.isActive ||
+                controller.value.hasActiveChildPage,
+            )
+            .some(value => value);
+        });
+      });
+    }
   }
 
   disconnectedCallback() {
@@ -99,23 +136,30 @@ export class FlowPage extends SignalsProviderMixin(
 
   render() {
     return html`<div>
-      <h2>${this.heading}</h2>
-      <slot></slot>
+      ${
+        this.isActive
+          ? html`<h2>${this.heading}</h2>
+              <slot name="content"></slot>`
+          : ""
+      }
+      <slot name="pages"></slot>
     </div>`;
   }
 
   static get styles() {
     return css`
       :host {
-        display: block;
-        padding: 16px;
-        border: 1px solid #000;
+        display: none;
       }
 
       :host([is-active]) {
-        //display: block;
+        display: block;
         padding: 16px;
         border: 3px solid red;
+      }
+
+      :host([has-active-child-page]) {
+        display: block;
       }
 
       :host([is-busy]) {

@@ -5,6 +5,7 @@ const state = {
   components: new Set(),
   isActive: false,
   isBusy: false,
+  hasActiveChildPage: false,
 };
 
 export class PageController extends Signal {

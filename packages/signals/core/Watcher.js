@@ -12,7 +12,7 @@ export class Watcher {
     // convert possible single value to an array
     [this.signals].flat().forEach(signal => signal.addWatcher(this));
     // provide the initial value to the callback immediately
-    this.callback(this.signals);
+    this.callback(this.signals, null);
   }
 
   // used by signal to notify the watcher of value changes
