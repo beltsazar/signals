@@ -32,27 +32,40 @@ export class FlowPage extends SignalsProviderMixin(
 
   async connectedCallback() {
     super.connectedCallback();
+
+    /**
+     * Get upstream signals: state$, flowController$ and possibly a parent pageController$
+     */
     const {
       flowController$,
       pageController$: parentPageController$,
       state$,
     } = this.getSignals();
 
+    /**
+     * Set downstream signals: state$, flowController$ and pageController$ of this page
+     */
     this.setSignals({
       pageController$: this.pageController$,
       flowController$,
       state$,
     });
 
+    // use the flowController inside this component
     this.flowController$ = flowController$;
 
-    // register this component with the flow controller so that it can be managed by the controller
+    /**
+     * Register this page to its parent:
+     * 1) flowController$ as the root, or a
+     * 2) pageController$ as a parent when inside a nested page
+     */
     if (parentPageController$) {
       parentPageController$.registerPage(this);
     } else {
       this.flowController$.registerPage(this);
     }
 
+    // map reactive properties to the local pageController$ state
     this.mapStateToSignals({
       isActive: this.computed(
         this.pageController$,
@@ -65,19 +78,27 @@ export class FlowPage extends SignalsProviderMixin(
       isBusy: this.computed(this.pageController$, ({ value }) => value.isBusy),
     });
 
-    // watch flowController$ signal for changes to active page and update local properties
+    /**
+     * Watch the flowController$ for navigation updates
+     */
     this.watch(this.flowController$, ({ value: flowController }) => {
-      // also update reactive state for child components
+      const isActive = flowController.navigation.activePage === this;
+      const isBusy = isActive && flowController.navigation.isPending;
+
+      // update the pageController$ reactive state
       this.pageController$.setValue(value => {
-        const isActive = flowController.navigation.activePage === this;
         value.isActive = isActive;
-        value.isBusy = isActive && flowController.navigation.isPending;
+        value.isBusy = isBusy;
       });
     });
 
-    // wait for child components to complete initialization
+    // wait for child components to complete initialization!!!
     await this.updateComplete;
 
+    /**
+     * Watch reactive state from child pages: if any of the child pages is active oe has an active child,
+     * this component will not show its own content, but it will allow nested pages to become visible
+     */
     if (this.pageController$.pages.size > 0) {
       const childPageControllers = Array.from(this.pageController$.pages).map(
         page => page.pageController$,
@@ -97,7 +118,7 @@ export class FlowPage extends SignalsProviderMixin(
     }
   }
 
-  // when page becomes visible, fire activation hook
+  // when page becomes visible in DOM, fire activation hook
   updated(changedProperties) {
     if (changedProperties.has("isActive") && this.isActive) {
       this.onActivation();
@@ -137,8 +158,12 @@ export class FlowPage extends SignalsProviderMixin(
     });
   }
 
+  /**
+   * Only show this page own content when active, but always allow nested pages to become visible
+   * @returns {TemplateResult<1>}
+   */
   render() {
-    return html`<div>
+    return html`
       ${
         this.isActive
           ? html`<h2>${this.heading}</h2>
@@ -146,7 +171,7 @@ export class FlowPage extends SignalsProviderMixin(
           : ""
       }
       <slot name="pages"></slot>
-    </div>`;
+    `;
   }
 
   static get styles() {
@@ -157,8 +182,6 @@ export class FlowPage extends SignalsProviderMixin(
 
       :host([is-active]) {
         display: block;
-        padding: 16px;
-        border: 3px solid red;
       }
 
       :host([has-active-child-page]) {

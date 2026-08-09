@@ -1,35 +1,26 @@
 import { Signal } from "../../../../../signals/index.js";
 
 const state = {
-  pages: new Set(),
-  components: new Set(),
   isActive: false,
   isBusy: false,
   hasActiveChildPage: false,
 };
 
 export class PageController extends Signal {
-  constructor() {
+  pageComponent;
+  pages = new Set();
+  components = new Set();
+
+  constructor(pageComponent) {
     super(state);
-  }
-
-  get pages() {
-    return this.value.pages;
-  }
-
-  get components() {
-    return this.value.components;
+    this.pageComponent = pageComponent;
   }
 
   registerPage(component) {
-    this.setValue(state => {
-      state.pages.add(component);
-    });
+    this.pages.add(component);
   }
 
   registerComponent(component) {
-    this.setValue(state => {
-      state.components.add(component);
-    });
+    this.components.add(component);
   }
 }

@@ -1,7 +1,6 @@
 import { Signal } from "../../../../../signals/index.js";
 
 const state = {
-  pages: new Set(),
   navigation: {
     activePage: null,
     isPending: false,
@@ -9,12 +8,10 @@ const state = {
 };
 
 export class FlowController extends Signal {
+  pages = new Set();
+
   constructor() {
     super(state);
-  }
-
-  get pages() {
-    return this.value.pages;
   }
 
   get activePage() {
@@ -90,8 +87,6 @@ export class FlowController extends Signal {
   }
 
   registerPage(component) {
-    this.setValue(state => {
-      state.pages.add(component);
-    });
+    this.pages.add(component);
   }
 }
