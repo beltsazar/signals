@@ -182,6 +182,8 @@ export class FlowPage extends SignalsProviderMixin(
 
       :host([is-active]) {
         display: block;
+        padding: 16px;
+        border: 1px dashed #000;
       }
 
       :host([has-active-child-page]) {
