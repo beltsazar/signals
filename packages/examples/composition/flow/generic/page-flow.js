@@ -2,7 +2,7 @@ import { LitElement, css, html } from "lit";
 import { SignalsProviderMixin, isEqual } from "../../../../signals/index.js";
 import { FlowController } from "./controllers/FlowController.js";
 
-export class FlowPages extends SignalsProviderMixin(LitElement) {
+export class PageFlow extends SignalsProviderMixin(LitElement) {
   flowController$ = new FlowController(this);
   state$;
 
