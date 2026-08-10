@@ -31,22 +31,39 @@ export class FlowController extends Signal {
     return getPages(this.pages);
   }
 
+  get navigationPages() {
+    function getPages(pages, accumulator = []) {
+      pages.forEach(page => {
+        // skip pages that have no valid condition
+        if (!page.pageController$.value.isConditionValid) {
+          return;
+        }
+        accumulator.push(page);
+        if (page.pageController$.pages.size > 0) {
+          getPages(page.pageController$.pages, accumulator);
+        }
+      });
+      return accumulator;
+    }
+    return getPages(this.pages);
+  }
+
   get nextPage() {
     // if no active page, start with the first
     if (!this.activePage && this.pages.size > 0) {
-      return this.flattenedPages[0];
+      return this.navigationPages[0];
     }
 
     // find the current active page
-    const activePageIndex = this.flattenedPages.findIndex(
+    const activePageIndex = this.navigationPages.findIndex(
       page => page === this.activePage,
     );
 
     // if the active page is the last in the sequence, start with the first one
-    if (activePageIndex < this.flattenedPages.length - 1) {
-      return this.flattenedPages[activePageIndex + 1];
+    if (activePageIndex < this.navigationPages.length - 1) {
+      return this.navigationPages[activePageIndex + 1];
     }
-    return this.flattenedPages[0];
+    return this.navigationPages[0];
   }
 
   async navigate(targetPage) {
