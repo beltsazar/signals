@@ -15,11 +15,13 @@ export class FlowPage extends SignalsProviderMixin(
     this.isActive = false;
     this.isBusy = false;
     this.hasActiveChildPage = false;
+    this.options = null;
   }
 
   static get properties() {
     return {
       heading: { type: String },
+      options: { type: Object },
       isActive: { type: Boolean, attribute: "is-active", reflect: true },
       hasActiveChildPage: {
         type: Boolean,
@@ -32,7 +34,6 @@ export class FlowPage extends SignalsProviderMixin(
 
   async connectedCallback() {
     super.connectedCallback();
-
     /**
      * Get upstream signals: state$, flowController$ and possibly a parent pageController$
      */
@@ -93,11 +94,23 @@ export class FlowPage extends SignalsProviderMixin(
       });
     });
 
+    /**
+     * Check option for condition, if condition is met, update the pageController$ reactive state
+     */
+    if (this.options?.condition) {
+      this.watch(state$, () => {
+        this.pageController$.setValue(value => {
+          value.isConditionValid =
+            this.options.condition(state$.value) ?? false;
+        });
+      });
+    }
+
     // wait for child components to complete initialization!!!
     await this.updateComplete;
 
     /**
-     * Watch reactive state from child pages: if any of the child pages is active oe has an active child,
+     * Watch reactive state from child pages: if any of the child pages is active or has an active child,
      * this component will not show its own content, but it will allow nested pages to become visible
      */
     if (this.pageController$.pages.size > 0) {

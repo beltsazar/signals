@@ -50,6 +50,10 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
     this.state = { ...this.state, profession: "Programmer" };
   }
 
+  showConditionalPage() {
+    this.state = { ...this.state, showConditionalPage: true };
+  }
+
   render() {
     return html`
       <page-flow active-page-id="1" heading="Page Flow" .state=${this.state} @state-updated="${e => this.updateState(e)}">
@@ -73,7 +77,8 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
             ><next-page-flow-component label="Next Page"></next-page-flow-component
           ></custom-flow-component-async>
         </flow-page>
-        <flow-page id="1" heading="Page 6">Slotted Content ...</flow-page>
+        <flow-page id="6" heading="Page 6">Slotted Content ... <button @click="${this.showConditionalPage}">Show conditional page</button></flow-page>
+        <flow-page id="7" heading="Conditional Page 7" .options="${{ condition: state => state.showConditionalPage }}">Slotted Content ...</flow-page>
       </page-flow>
     `;
   }
