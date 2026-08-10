@@ -69,7 +69,6 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
 
   render() {
     return html`<h1>${this.heading}</h1>
-      <p>number of pages: ${this.flowController$.pages.size}</p>
       <slot></slot> `;
   }
 

@@ -44,7 +44,7 @@ export class CustomFlowComponent extends FlowComponent {
   validate() {
     // the page is only valid when updated property is available
     const isValid = !!this.state.updated;
-    // update the
+    // update the validation state
     this.validation$.setValue({
       isValidated: true,
       isValid,
@@ -53,10 +53,10 @@ export class CustomFlowComponent extends FlowComponent {
   }
 
   firstUpdated() {
-    this.onActivation();
+    this.onActivated();
   }
 
-  onActivation() {
+  onActivated() {
     const button = this.buttonRef.value;
     button.focus();
   }
@@ -87,6 +87,10 @@ export class CustomFlowComponent extends FlowComponent {
         display: block;
         padding: 16px;
         border: 1px dotted #000;
+      }
+
+      button:focus {
+        border: 3px solid red;
       }
     `;
   }

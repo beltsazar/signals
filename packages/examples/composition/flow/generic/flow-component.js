@@ -17,7 +17,7 @@ export class FlowComponent extends SignalsConsumerMixin(LitElement) {
 
     // put signals on the element scope
     this.flowController$ = flowController$;
-    this.pageController$ = pageController$;
+    this.pageController$ = pageController$ ?? null;
     this.state$ = state$;
   }
 

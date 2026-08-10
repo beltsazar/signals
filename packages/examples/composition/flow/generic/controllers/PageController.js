@@ -7,13 +7,13 @@ const state = {
 };
 
 export class PageController extends Signal {
-  pageComponent;
+  component;
   pages = new Set();
   components = new Set();
 
-  constructor(pageComponent) {
+  constructor(component) {
     super(state);
-    this.pageComponent = pageComponent;
+    this.component = component;
   }
 
   registerPage(component) {

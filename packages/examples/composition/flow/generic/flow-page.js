@@ -51,8 +51,9 @@ export class FlowPage extends SignalsProviderMixin(
       state$,
     });
 
-    // use the flowController inside this component
+    // use the flowController and possible parent pageController inside this component
     this.flowController$ = flowController$;
+    this.parentPageController$ = parentPageController$;
 
     /**
      * Register this page to its parent:
@@ -121,7 +122,7 @@ export class FlowPage extends SignalsProviderMixin(
   // when page becomes visible in DOM, fire activation hook
   updated(changedProperties) {
     if (changedProperties.has("isActive") && this.isActive) {
-      this.onActivation();
+      this.onActivated();
     }
   }
 
@@ -152,9 +153,9 @@ export class FlowPage extends SignalsProviderMixin(
   }
 
   // Page has become visible and ready for user interaction or DOM manipulation
-  onActivation() {
+  onActivated() {
     this.pageController$.components.forEach(component => {
-      component.onActivation?.();
+      component.onActivated?.();
     });
   }
 
@@ -163,10 +164,12 @@ export class FlowPage extends SignalsProviderMixin(
    * @returns {TemplateResult<1>}
    */
   render() {
+    const breadCrumb = this.parentPageController$?.component.heading;
     return html`
       ${
         this.isActive
-          ? html`<h2>${this.heading}</h2>
+          ? html` ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
+              <h2>${this.heading}</h2>
               <slot></slot>`
           : ""
       }

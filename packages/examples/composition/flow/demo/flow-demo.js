@@ -17,7 +17,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
 
   static get properties() {
     return {
-      state: { type: Object },
+      state: { type: Object, state: true },
     };
   }
 
@@ -40,8 +40,10 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
   }
 
   updateState(e) {
-    // update the local state with updated state from the page flow component
-    this.state = e.detail.state;
+    // update the local state with updated state from the page flow component, wait for update to complete to prevent race conditions
+    this.updateComplete.then(() => {
+      this.state = e.detail.state;
+    });
   }
 
   addProfession() {
