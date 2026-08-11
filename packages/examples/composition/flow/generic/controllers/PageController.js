@@ -1,4 +1,4 @@
-import { Signal } from "../../../../../signals/index.js";
+import { Signal, Watcher } from "../../../../../signals/index.js";
 
 const state = {
   isActive: false,
@@ -22,5 +22,45 @@ export class PageController extends Signal {
 
   registerComponent(component) {
     this.components.add(component);
+  }
+
+  watchFlowController(flowController$) {
+    /**
+     * Watch the flowController$ for navigation updates
+     */
+    new Watcher(flowController$, ({ value: flowController }) => {
+      const isActive = flowController.navigation.activePage === this.component;
+      const isBusy = isActive && flowController.navigation.isPending;
+
+      // update the pageController$ reactive state
+      this.setValue(value => {
+        value.isActive = isActive;
+        value.isBusy = isBusy;
+      });
+    });
+  }
+
+  /**
+   * Watch reactive state from child pages: if any of the child pages is active or has an active child,
+   * this component will not show its own content, but it will allow nested pages to become visible
+   */
+  watchChildPageControllers() {
+    if (this.pages.size > 0) {
+      const childPageControllers = Array.from(this.pages).map(
+        page => page.pageController$,
+      );
+
+      new Watcher ([...childPageControllers], childPageController$ => {
+        this.setValue(value => {
+          value.hasActiveChildPage = childPageController$
+            .map(
+              controller =>
+                controller.value.isActive ||
+                controller.value.hasActiveChildPage,
+            )
+            .some(value => value);
+        });
+      });
+    }
   }
 }

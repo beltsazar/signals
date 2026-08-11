@@ -95,30 +95,12 @@ export class FlowPage extends SignalsProviderMixin(
       });
     });
 
+    this.pageController$.watchFlowController((flowController$))
+
     // wait for child components to complete initialization!!!
     await this.updateComplete;
 
-    /**
-     * Watch reactive state from child pages: if any of the child pages is active or has an active child,
-     * this component will not show its own content, but it will allow nested pages to become visible
-     */
-    if (this.pageController$.pages.size > 0) {
-      const childPageControllers = Array.from(this.pageController$.pages).map(
-        page => page.pageController$,
-      );
-
-      this.watch([...childPageControllers], childPageController$ => {
-        this.pageController$.setValue(value => {
-          value.hasActiveChildPage = childPageController$
-            .map(
-              controller =>
-                controller.value.isActive ||
-                controller.value.hasActiveChildPage,
-            )
-            .some(value => value);
-        });
-      });
-    }
+    this.pageController$.watchChildPageControllers();
   }
 
   // when page becomes visible in DOM, fire activation hook
