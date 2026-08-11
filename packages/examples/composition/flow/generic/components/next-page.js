@@ -1,7 +1,7 @@
 import { css, html } from "lit";
 import { FlowComponent } from "../flow-component.js";
 
-export class NextPageFlowComponent extends FlowComponent {
+export class NextPage extends FlowComponent {
   constructor() {
     super();
   }
@@ -9,16 +9,21 @@ export class NextPageFlowComponent extends FlowComponent {
   static get properties() {
     return {
       label: { type: String },
-      isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
+      isDisabled: { type: Boolean, attribute: "is-disabled", reflect: true },
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.mapStateToSignals({
-      isBusy: this.computed(this.flowController$, ({ value }) => {
-        this.isBusy = value.navigation.isPending;
-      }),
+      isDisabled: this.computed(
+        [this.flowController$, this.state$],
+        ([{ value }]) => {
+          return (
+            value.navigation.isPending || this.flowController$.nextPage === null
+          );
+        },
+      ),
     });
   }
 
@@ -41,7 +46,7 @@ export class NextPageFlowComponent extends FlowComponent {
         padding-bottom: 16px;
       }
 
-      :host([is-busy]) {
+      :host([is-disabled]) {
         opacity: 0.3;
       }
     `;

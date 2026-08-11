@@ -4,7 +4,8 @@ import { PageFlow } from "../generic/page-flow.js";
 import { FlowPage } from "../generic/flow-page.js";
 import { CustomFlowComponent } from "./custom-flow-component.js";
 import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
-import { NextPageFlowComponent } from "../generic/components/next-page-flow-component.js";
+import { PreviousPage } from "../generic/components/previous-page.js";
+import { NextPage } from "../generic/components/next-page.js";
 
 export class FlowDemo extends ScopedElementsMixin(LitElement) {
   constructor() {
@@ -25,7 +26,8 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
     return {
       "page-flow": PageFlow,
       "flow-page": FlowPage,
-      "next-page-flow-component": NextPageFlowComponent,
+      "previous-page-flow-component": PreviousPage,
+      "next-page-flow-component": NextPage,
       "custom-flow-component": CustomFlowComponent,
       "custom-flow-component-async": CustomFlowComponentAsync,
     };
@@ -59,6 +61,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
       <page-flow active-page-id="1" heading="Page Flow" .state=${this.state} @state-updated="${e => this.updateState(e)}">
         <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
         <button @click="${this.addProfession}">Add Profession</button>
+        <previous-page-flow-component label="Previous Page"></previous-page-flow-component>
         <next-page-flow-component label="Next Page"></next-page-flow-component>
         <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
         <flow-page id="2" heading="Page 2"

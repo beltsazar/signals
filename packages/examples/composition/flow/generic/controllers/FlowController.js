@@ -63,10 +63,30 @@ export class FlowController extends Signal {
     if (activePageIndex < this.navigationPages.length - 1) {
       return this.navigationPages[activePageIndex + 1];
     }
-    return this.navigationPages[0];
+    return null;
+  }
+
+  get previousPage() {
+    // if no active page, start with the first
+    if (!this.activePage && this.pages.size > 0) {
+      return null;
+    }
+
+    // find the current active page
+    const activePageIndex = this.navigationPages.findIndex(
+      page => page === this.activePage,
+    );
+
+    // if the active page is the last in the sequence, start with the first one
+    if (activePageIndex > 0) {
+      return this.navigationPages[activePageIndex - 1];
+    }
+    return null;
   }
 
   async navigate(targetPage) {
+    if (!targetPage || targetPage === this.activePage) return;
+
     this.setValue(state => {
       state.navigation.isPending = true;
     });
