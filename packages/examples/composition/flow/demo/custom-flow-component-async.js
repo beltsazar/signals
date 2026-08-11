@@ -33,7 +33,7 @@ export class CustomFlowComponentAsync extends FlowComponent {
         };
       });
       resolver(true);
-    }, 2000);
+    }, 1000);
     return deferred;
   }
 

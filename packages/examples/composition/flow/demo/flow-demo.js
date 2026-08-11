@@ -53,7 +53,19 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
   }
 
   showConditionalPage() {
-    this.state = { ...this.state, showConditionalPage: true };
+    const showConditionalPage = !this.state.showConditionalPage;
+    this.state = { ...this.state, showConditionalPage };
+  }
+
+  showConditionalPageGroup() {
+    const showConditionalPageGroup = !this.state.showConditionalPageGroup;
+    this.state = { ...this.state, showConditionalPageGroup };
+  }
+
+  showConditionalPageInsideGroup() {
+    const showConditionalPageInsideGroup =
+      !this.state.showConditionalPageInsideGroup;
+    this.state = { ...this.state, showConditionalPageInsideGroup };
   }
 
   render() {
@@ -80,8 +92,17 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
             ><next-page-flow-component label="Next Page"></next-page-flow-component
           ></custom-flow-component-async>
         </flow-page>
-        <flow-page id="6" heading="Page 6">Slotted Content ... <button @click="${this.showConditionalPage}">Show conditional page</button></flow-page>
-        <flow-page id="7" heading="Conditional Page 7" .options="${{ condition: state => state.showConditionalPage }}">Slotted Content ...</flow-page>
+        <flow-page id="6" heading="Page 6">Slotted Content ... <button @click="${this.showConditionalPage}">Toggle conditional page</button></flow-page>
+        <flow-page id="7" heading="Conditional Page 7" .options="${{ condition: state => state.showConditionalPage }}">Slotted Content ...
+          <button @click="${this.showConditionalPageGroup}">Toggle conditional page group</button></flow-page>
+        <flow-page id="8" heading="Conditional Page Group 8" .options="${{ condition: state => state.showConditionalPageGroup }}">Slotted Content ...
+        <div slot="pages">
+          <flow-page id="9" heading="Nested Page 9">Slotted Content ...<button @click="${this.showConditionalPageInsideGroup}">Toggle conditional page inside group</button></flow-page>
+          <flow-page id="10" heading="Nested Page 10" .options="${{ condition: state => state.showConditionalPageInsideGroup }}">Slotted Content ...</flow-page>
+          <flow-page id="11" heading="Nested Page 11">Slotted Content ...</flow-page>
+        </div>
+     </flow-page>
+        <flow-page id="12" heading="Last Page 12">Slotted Content ...</flow-page>
       </page-flow>
     `;
   }
