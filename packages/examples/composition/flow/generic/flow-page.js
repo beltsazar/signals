@@ -55,6 +55,7 @@ export class FlowPage extends SignalsProviderMixin(
     // use the flowController and possible parent pageController inside this component
     this.flowController$ = flowController$;
     this.parentPageController$ = parentPageController$;
+    this.state$ = state$;
 
     /**
      * Register this page to its parent:
@@ -94,18 +95,6 @@ export class FlowPage extends SignalsProviderMixin(
       });
     });
 
-    /**
-     * Check option for condition, if condition is met, update the pageController$ reactive state
-     */
-    if (this.options?.condition) {
-      this.watch(state$, () => {
-        this.pageController$.setValue(value => {
-          value.isConditionValid =
-            this.options.condition(state$.value) ?? false;
-        });
-      });
-    }
-
     // wait for child components to complete initialization!!!
     await this.updateComplete;
 
@@ -143,6 +132,10 @@ export class FlowPage extends SignalsProviderMixin(
     super.disconnectedCallback();
   }
 
+  /**
+   * onBeforeLeaving Hook
+   * @returns {Promise<this is *[]>}
+   */
   async onBeforeLeaving() {
     const onBeforeLeaving = [];
     this.pageController$.components.forEach(component => {
@@ -154,6 +147,10 @@ export class FlowPage extends SignalsProviderMixin(
     return onBeforeLeaving.every(value => value);
   }
 
+  /**
+   * onBeforeEntering Hook
+   * @returns {Promise<this is *[]>}
+   */
   async onBeforeEntering() {
     const onBeforeEntering = [];
     this.pageController$.components.forEach(component => {
@@ -165,11 +162,27 @@ export class FlowPage extends SignalsProviderMixin(
     return onBeforeEntering.every(value => value);
   }
 
-  // Page has become visible and ready for user interaction or DOM manipulation
+  /**
+   * onActivated Hook
+   * age has become visible and ready for user interaction or DOM manipulation
+   */
   onActivated() {
     this.pageController$.components.forEach(component => {
       component.onActivated?.();
     });
+  }
+
+  /**
+   * Check options object for conditional rendering of this page
+   * If condition is not defined, always show this page
+   * If condition is defined, show this page only when condition is true
+   * @returns {boolean}
+   */
+  isConditionValid() {
+    if (this.options?.condition) {
+      return this.options.condition(this.state$.value) ?? false;
+    }
+    return true;
   }
 
   /**

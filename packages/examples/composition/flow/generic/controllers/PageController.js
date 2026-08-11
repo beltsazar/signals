@@ -3,7 +3,6 @@ import { Signal } from "../../../../../signals/index.js";
 const state = {
   isActive: false,
   isBusy: false,
-  isConditionValid: true,
   hasActiveChildPage: false,
 };
 

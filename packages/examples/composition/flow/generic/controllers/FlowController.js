@@ -35,7 +35,7 @@ export class FlowController extends Signal {
     function getPages(pages, accumulator = []) {
       pages.forEach(page => {
         // skip pages that have no valid condition
-        if (!page.pageController$.value.isConditionValid) {
+        if (!page.isConditionValid()) {
           return;
         }
         accumulator.push(page);
