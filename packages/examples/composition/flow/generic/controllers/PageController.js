@@ -4,13 +4,13 @@ const state = {
   isActive: false,
   isAdvanced: false,
   isCompleted: false,
-  isVisitedPage: false,
+  isVisited: false,
   isBusy: false,
   hasActiveChildPage: false,
 };
 
 export class PageController extends Signal {
-  component;
+  component; // the page web component
   pages = new Set();
   components = new Set();
 
@@ -35,21 +35,33 @@ export class PageController extends Signal {
       const isActive = flowController.navigation.activePage === this.component;
       const isAdvanced =
         flowController.navigation.advancedPage === this.component;
+
+      const componentIndex = flowController$.getFlattenedPageIndex(
+        this.component,
+      );
+      const advancedPageIndex = flowController$.getFlattenedPageIndex(
+        flowController.navigation.advancedPage,
+      );
+
+      // Everything BEFORE the advancedPage is considered completed
       const isCompleted =
-        this.value.isCompleted ||
-        flowController.navigation.completedPage === this.component;
+        flowController.navigation.completedPage === this.component ||
+        advancedPageIndex > componentIndex;
+
+      // Everything BEFORE and INCLUDING the advancedPage is considered visited
       const isVisited =
-        this.value.isVisited ||
-        flowController.navigation.visitedPage === this.component;
+        flowController.navigation.visitedPage === this.component ||
+        advancedPageIndex > componentIndex;
+
       const isBusy = flowController.navigation.isPending;
 
       // update the pageController$ reactive state
       this.setValue(value => {
         value.isActive = isActive;
-        value.isBusy = isBusy;
-        value.isCompleted = isCompleted;
         value.isAdvanced = isAdvanced;
+        value.isCompleted = isCompleted;
         value.isVisited = isVisited;
+        value.isBusy = isBusy;
       });
     });
   }

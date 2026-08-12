@@ -151,6 +151,10 @@ export class FlowController extends Signal {
     return this.navigationPages.findIndex(page => page === pageComponent);
   }
 
+  getFlattenedPageIndex(pageComponent) {
+    return this.flattenedPages.findIndex(page => page === pageComponent);
+  }
+
   getPageById(id) {
     return this.flattenedPages.find(page => page.id === id);
   }

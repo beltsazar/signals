@@ -83,14 +83,19 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
         <advance-page-button label="Proceed"></advance-page-button>
         <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
         <flow-page id="2" heading="Page 2"
-          >Slotted Content ...<div slot="pages"><flow-page id="3" heading="Page 3 nested inside page 2"
-            >Slotted Content ...<div slot="pages"><flow-page id="4"
-              heading="Page 4 nested inside 3"
-              >Slotted Content ...<custom-flow-component heading="Custom page"
-                ><next-page-button
-                  label="Next Page"
-                ></next-page-button></custom-flow-component></div></flow-page></div></flow-page
-        ></flow-page>
+          >Slotted Content ...
+          <div slot="pages">
+            <flow-page id="3" heading="Page 3 nested inside page 2"
+              >Slotted Content ...
+              <div slot="pages">
+                <flow-page id="4"
+                  heading="Page 4 nested inside 3"
+                  >Slotted Content ...<custom-flow-component heading="Custom page"><next-page-button label="Next Page"></next-page-button></custom-flow-component>
+                </flow-page>
+              </div>
+            </flow-page>
+          </div>
+        </flow-page>
         <flow-page id="5" heading="Page 5"
           >Slotted Content ...
           <custom-flow-component-async
@@ -102,12 +107,12 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
         <flow-page id="7" heading="Conditional Page 7" .options="${{ condition: state => state.showConditionalPage }}">Slotted Content ...
           <button @click="${this.showConditionalPageGroup}">Toggle conditional page group</button></flow-page>
         <flow-page id="8" heading="Conditional Page Group 8" .options="${{ condition: state => state.showConditionalPageGroup }}">Slotted Content ...
-        <div slot="pages">
-          <flow-page id="9" heading="Nested Page 9">Slotted Content ...<button @click="${this.showConditionalPageInsideGroup}">Toggle conditional page inside group</button></flow-page>
-          <flow-page id="10" heading="Nested Page 10" .options="${{ condition: state => state.showConditionalPageInsideGroup }}">Slotted Content ...</flow-page>
-          <flow-page id="11" heading="Nested Page 11">Slotted Content ...</flow-page>
-        </div>
-     </flow-page>
+          <div slot="pages">
+            <flow-page id="9" heading="Nested Page 9">Slotted Content ...<button @click="${this.showConditionalPageInsideGroup}">Toggle conditional page inside group</button></flow-page>
+            <flow-page id="10" heading="Conditional Nested Page 10" .options="${{ condition: state => state.showConditionalPageInsideGroup }}">Slotted Content ...</flow-page>
+            <flow-page id="11" heading="Nested Page 11">Slotted Content ...</flow-page>
+          </div>
+        </flow-page>
         <flow-page id="12" heading="Last Page 12">Slotted Content ...</flow-page>
       </page-flow>
     `;

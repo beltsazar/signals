@@ -19,7 +19,7 @@ export class FlowProgress extends FlowComponent {
   connectedCallback() {
     super.connectedCallback();
 
-    // watch flowController$ until it has pages and start to watch pages for navigation changes
+    // watch flowController$ until it has pages and start to watch ALL pages for navigation changes
     const initialWatcher = this.watch(this.flowController$, () => {
       const flattenedPages = this.flowController$.flattenedPages;
 
@@ -57,11 +57,15 @@ export class FlowProgress extends FlowComponent {
       from ${this.navigationPages.length} pages
       <div>
         ${this.navigationPages.map((page, index) => {
+          // extract state from signal, NOT from the component itself
+          const { isActive, isAdvanced, isCompleted, isVisited } =
+            page.pageController$.value;
+
           const classes = {
-            active: page.isActive,
-            advanced: page.isAdvanced,
-            completed: page.isCompleted,
-            visited: page.isVisited,
+            active: isActive,
+            advanced: isAdvanced,
+            completed: isCompleted,
+            visited: isVisited,
           };
           return html`<p class=${classMap(classes)}>${index + 1}</p>`;
         })}
