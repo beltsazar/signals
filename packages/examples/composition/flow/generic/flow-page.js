@@ -14,6 +14,7 @@ export class FlowPage extends SignalsProviderMixin(
     super();
     this.isActive = false;
     this.isBusy = false;
+    this.isProgress = false;
     this.hasActiveChildPage = false;
     this.options = null;
   }
@@ -23,12 +24,13 @@ export class FlowPage extends SignalsProviderMixin(
       heading: { type: String },
       options: { type: Object },
       isActive: { type: Boolean, attribute: "is-active", reflect: true },
+      isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
+      isProgress: { type: Boolean, attribute: "is-progress", reflect: true },
       hasActiveChildPage: {
         type: Boolean,
         attribute: "has-active-child-page",
         reflect: true,
       },
-      isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
     };
   }
 
@@ -79,27 +81,19 @@ export class FlowPage extends SignalsProviderMixin(
         ({ value }) => value.hasActiveChildPage,
       ),
       isBusy: this.computed(this.pageController$, ({ value }) => value.isBusy),
+      isProgress: this.computed(
+        this.pageController$,
+        ({ value }) => value.isProgress,
+      ),
     });
 
-    /**
-     * Watch the flowController$ for navigation updates
-     */
-    this.watch(this.flowController$, ({ value: flowController }) => {
-      const isActive = flowController.navigation.activePage === this;
-      const isBusy = isActive && flowController.navigation.isPending;
-
-      // update the pageController$ reactive state
-      this.pageController$.setValue(value => {
-        value.isActive = isActive;
-        value.isBusy = isBusy;
-      });
-    });
-
-    this.pageController$.watchFlowController((flowController$))
+    // Watch the flowController$ for navigation updates
+    this.pageController$.watchFlowController(flowController$);
 
     // wait for child components to complete initialization!!!
     await this.updateComplete;
 
+    // watch for child page controllers state changes
     this.pageController$.watchChildPageControllers();
   }
 
@@ -178,6 +172,7 @@ export class FlowPage extends SignalsProviderMixin(
         this.isActive
           ? html` ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
               <h2>${this.heading}</h2>
+              ${this.isProgress}
               <slot></slot>`
           : ""
       }

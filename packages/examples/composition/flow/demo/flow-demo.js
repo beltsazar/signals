@@ -6,6 +6,8 @@ import { CustomFlowComponent } from "./custom-flow-component.js";
 import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
 import { PreviousPage } from "../generic/components/previous-page.js";
 import { NextPage } from "../generic/components/next-page.js";
+import { ProgressPage } from "../generic/components/progress-page.js";
+import { FlowProgress } from "../generic/components/flow-progress.js";
 
 export class FlowDemo extends ScopedElementsMixin(LitElement) {
   constructor() {
@@ -26,8 +28,10 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
     return {
       "page-flow": PageFlow,
       "flow-page": FlowPage,
-      "previous-page-flow-component": PreviousPage,
-      "next-page-flow-component": NextPage,
+      "flow-progress": FlowProgress,
+      "previous-page": PreviousPage,
+      "next-page": NextPage,
+      "progress-page": ProgressPage,
       "custom-flow-component": CustomFlowComponent,
       "custom-flow-component-async": CustomFlowComponentAsync,
     };
@@ -71,25 +75,27 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
   render() {
     return html`
       <page-flow active-page-id="1" heading="Page Flow" .state=${this.state} @state-updated="${e => this.updateState(e)}">
+        <flow-progress></flow-progress>
         <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
         <button @click="${this.addProfession}">Add Profession</button>
-        <previous-page-flow-component label="Previous Page"></previous-page-flow-component>
-        <next-page-flow-component label="Next Page"></next-page-flow-component>
+        <previous-page label="Previous Page"></previous-page>
+        <next-page label="Next Page"></next-page>
+        <progress-page label="Proceed"></progress-page>
         <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
         <flow-page id="2" heading="Page 2"
           >Slotted Content ...<div slot="pages"><flow-page id="3" heading="Page 3 nested inside page 2"
             >Slotted Content ...<div slot="pages"><flow-page id="4"
               heading="Page 4 nested inside 3"
               >Slotted Content ...<custom-flow-component heading="Custom page"
-                ><next-page-flow-component
+                ><next-page
                   label="Next Page"
-                ></next-page-flow-component></custom-flow-component></div></flow-page></div></flow-page
+                ></next-page></custom-flow-component></div></flow-page></div></flow-page
         ></flow-page>
         <flow-page id="5" heading="Page 5"
           >Slotted Content ...
           <custom-flow-component-async
             heading="Custom page with async content"
-            ><next-page-flow-component label="Next Page"></next-page-flow-component
+            ><next-page label="Next Page"></next-page
           ></custom-flow-component-async>
         </flow-page>
         <flow-page id="6" heading="Page 6">Slotted Content ... <button @click="${this.showConditionalPage}">Toggle conditional page</button></flow-page>

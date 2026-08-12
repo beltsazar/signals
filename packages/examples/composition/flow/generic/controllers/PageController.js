@@ -2,6 +2,8 @@ import { Signal, Watcher } from "../../../../../signals/index.js";
 
 const state = {
   isActive: false,
+
+  isProgress: false,
   isBusy: false,
   hasActiveChildPage: false,
 };
@@ -31,11 +33,14 @@ export class PageController extends Signal {
     new Watcher(flowController$, ({ value: flowController }) => {
       const isActive = flowController.navigation.activePage === this.component;
       const isBusy = isActive && flowController.navigation.isPending;
+      const isProgress =
+        flowController.navigation.progressPage === this.component;
 
       // update the pageController$ reactive state
       this.setValue(value => {
         value.isActive = isActive;
         value.isBusy = isBusy;
+        value.isProgress = isProgress;
       });
     });
   }
@@ -50,7 +55,7 @@ export class PageController extends Signal {
         page => page.pageController$,
       );
 
-      new Watcher ([...childPageControllers], childPageController$ => {
+      new Watcher([...childPageControllers], childPageController$ => {
         this.setValue(value => {
           value.hasActiveChildPage = childPageController$
             .map(
