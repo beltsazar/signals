@@ -32,7 +32,7 @@ export class AdvanceButton extends FlowComponent {
   }
 
   advancePage() {
-    this.flowController$.advancePage();
+    this.flowController$.commitPage();
   }
 
   render() {

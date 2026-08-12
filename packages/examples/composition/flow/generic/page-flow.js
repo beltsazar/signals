@@ -62,7 +62,7 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
 
     // navigate to start page
     if (this.activePageId) {
-      await this.flowController$.advancePage(
+      await this.flowController$.commitPage(
         this.flowController$.getPageById(this.activePageId),
       );
     }

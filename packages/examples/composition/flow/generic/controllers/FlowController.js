@@ -92,11 +92,11 @@ export class FlowController extends Signal {
   }
 
   /**
-   * Advanced to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
+   * Commit consumer changes on the active page and advance to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
    * @param targetPage
    * @returns {Promise<boolean>}
    */
-  async advancePage(targetPage) {
+  async commitPage(targetPage) {
     const activePage = this.activePage;
 
     // if no target page is provided, advance to the next page
