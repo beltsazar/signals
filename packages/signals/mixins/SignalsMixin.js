@@ -11,7 +11,9 @@ export const SignalsMixin = dedupeMixin(
       #watchers = [];
 
       watch(signals, callback) {
-        this.#watchers.push(new Watcher(signals, callback));
+        const watcher = new Watcher(signals, callback);
+        this.#watchers.push(watcher);
+        return watcher;
       }
 
       signal(initialValue) {

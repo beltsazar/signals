@@ -36,8 +36,10 @@ export class PageController extends Signal {
       const isAdvanced =
         flowController.navigation.advancedPage === this.component;
       const isCompleted =
+        this.value.isCompleted ||
         flowController.navigation.completedPage === this.component;
       const isVisited =
+        this.value.isVisited ||
         flowController.navigation.visitedPage === this.component;
       const isBusy = flowController.navigation.isPending;
 

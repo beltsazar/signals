@@ -22,7 +22,7 @@ export class FlowController extends Signal {
   }
 
   get activePageIndex() {
-    return this.navigationPages.findIndex(page => page === this.activePage);
+    return this.getNavigationPageIndex(this.activePage);
   }
 
   get flattenedPages() {
@@ -61,14 +61,9 @@ export class FlowController extends Signal {
       return this.navigationPages[0];
     }
 
-    // find the current active page
-    const activePageIndex = this.navigationPages.findIndex(
-      page => page === this.activePage,
-    );
-
     // if the active page is the last in the sequence, start with the first one
-    if (activePageIndex < this.navigationPages.length - 1) {
-      return this.navigationPages[activePageIndex + 1];
+    if (this.activePageIndex < this.navigationPages.length - 1) {
+      return this.navigationPages[this.activePageIndex + 1];
     }
     return null;
   }
@@ -79,14 +74,9 @@ export class FlowController extends Signal {
       return null;
     }
 
-    // find the current active page
-    const activePageIndex = this.navigationPages.findIndex(
-      page => page === this.activePage,
-    );
-
     // if the active page is the first in the sequence, return null
-    if (activePageIndex > 0) {
-      return this.navigationPages[activePageIndex - 1];
+    if (this.activePageIndex > 0) {
+      return this.navigationPages[this.activePageIndex - 1];
     }
     return null;
   }
@@ -155,6 +145,10 @@ export class FlowController extends Signal {
   // simple page navigation
   navigatePage(target) {
     this.setActivePage(target);
+  }
+
+  getNavigationPageIndex(pageComponent) {
+    return this.navigationPages.findIndex(page => page === pageComponent);
   }
 
   getPageById(id) {

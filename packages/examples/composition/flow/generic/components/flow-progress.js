@@ -5,33 +5,44 @@ import { FlowComponent } from "../flow-component.js";
 export class FlowProgress extends FlowComponent {
   constructor() {
     super();
-    this.activePageIndex = 0;
-    this.advancedPageIndex = 0;
-    this.navigationPages = 0;
+    this.navigationStatus = {};
+    this.navigationPages = [];
   }
 
   static get properties() {
     return {
-      activePageIndex: { type: Number, state: true },
-      advancedPageIndex: { type: Number, state: true },
-      navigationPages: { type: Number, state: true },
+      navigationPages: { type: Array, state: true },
+      navigationStatus: { type: Object, state: true },
     };
   }
 
   connectedCallback() {
     super.connectedCallback();
+
+    // watch flowController$ until it has pages and start to watch pages for navigation changes
+    const initialWatcher = this.watch(this.flowController$, () => {
+      const flattenedPages = this.flowController$.flattenedPages;
+
+      // if the flowController$ has pages, watch the pageControllers
+      if (flattenedPages.length > 0) {
+        const pageControllers = flattenedPages.map(
+          page => page.pageController$,
+        );
+
+        // watch the pageControllers for any changes and trigger rerender of the navigation pages
+        this.watch([...pageControllers, this.state$], () => {
+          this.navigationPages = [...this.flowController$.navigationPages];
+        });
+
+        // dispose the watcher after the first time it fires
+        initialWatcher.dispose();
+      }
+    });
+
     this.mapStateToSignals({
-      activePageIndex: this.computed(
-        [this.flowController$, this.state$],
-        () => this.flowController$.activePageIndex,
-      ),
-      advancedPageIndex: this.computed(
-        [this.flowController$, this.state$],
-        () => this.flowController$.advancedPageIndex,
-      ),
-      navigationPages: this.computed(
-        [this.flowController$, this.state$],
-        () => this.flowController$.navigationPages,
+      navigationStatus: this.computed(
+        [this.flowController$],
+        () => this.flowController$.value.navigation,
       ),
     });
   }
@@ -41,15 +52,18 @@ export class FlowProgress extends FlowComponent {
   }
 
   render() {
-    return html`Page ${this.activePageIndex + 1} from
-      ${this.navigationPages.length} pages
+    return html`Page
+      ${this.flowController$.getNavigationPageIndex(this.navigationStatus?.activePage) + 1}
+      from ${this.navigationPages.length} pages
       <div>
         ${this.navigationPages.map((page, index) => {
           const classes = {
-            activePage: index === this.activePageIndex,
-            advancedPage: index <= this.advancedPageIndex,
+            active: page.isActive,
+            advanced: page.isAdvanced,
+            completed: page.isCompleted,
+            visited: page.isVisited,
           };
-          return html`<p class=${classMap(classes)}></p>`;
+          return html`<p class=${classMap(classes)}>${index + 1}</p>`;
         })}
       </div> `;
   }
@@ -70,22 +84,34 @@ export class FlowProgress extends FlowComponent {
 
       p {
         flex-grow: 1;
-        border: 4px solid lightgray;
-        height: 10px;
+        border: 2px dashed lightgray;
+        text-align: center;
       }
 
-      p.activePage {
-        border: 4px solid red;
+      p.visited {
+        border: 2px solid black;
+      }
+
+      p.active {
         background-color: red;
       }
 
-      p.advancedPage {
-        background-color: black;
+      p.completed {
+        background-color: green;
+        color: white;
       }
 
-      p.activePage.advancedPage {
-        border: 4px solid red;
+      p.advanced {
+        border: 2px dashed black;
+      }
+
+      p.active.completed {
         background-color: red;
+        color: black;
+      }
+
+      p.active.advanced {
+        border: 2px solid black;
       }
     `;
   }

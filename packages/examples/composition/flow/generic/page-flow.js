@@ -54,8 +54,11 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
     });
 
     this.mapStateToSignals({
-      _flowController: this.computed(this.flowController$, ({ value }) => value.navigation),
-    })
+      _flowController: this.computed(
+        this.flowController$,
+        ({ value }) => value.navigation,
+      ),
+    });
 
     // wait for child components to complete initialization
     await this.updateComplete;
