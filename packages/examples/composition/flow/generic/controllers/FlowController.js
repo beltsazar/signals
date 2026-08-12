@@ -3,7 +3,9 @@ import { Signal } from "../../../../../signals/index.js";
 const state = {
   navigation: {
     activePage: null,
-    progressPage: null,
+    advancedPage: null,
+    completedPage: null,
+    visitedPage: null,
     isPending: false,
   },
 };
@@ -19,8 +21,8 @@ export class FlowController extends Signal {
     return this.value.navigation.activePage;
   }
 
-  get progressPage() {
-    return this.value.navigation.progressPage;
+  get activePageIndex() {
+    return this.navigationPages.findIndex(page => page === this.activePage);
   }
 
   get flattenedPages() {
@@ -89,7 +91,19 @@ export class FlowController extends Signal {
     return null;
   }
 
-  async navigate(targetPage) {
+  /**
+   * Advanced to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
+   * @param targetPage
+   * @returns {Promise<boolean>}
+   */
+  async advancePage(targetPage) {
+    const activePage = this.activePage;
+
+    // if no target page is provided, advance to the next page
+    if (!targetPage) {
+      targetPage = this.nextPage;
+    }
+
     // if the target page is null or is already active, do nothing
     if (!targetPage) {
       return false;
@@ -99,13 +113,9 @@ export class FlowController extends Signal {
       state.navigation.isPending = true;
     });
 
-    /**
-     * When navigating to the same page (activePage === targetPage), only execute onBeforeEntering hook.
-     */
-
     // Execute onBeforeLeaving hook on the active page if available
-    const isOnBeforeLeaving = this.activePage
-      ? await this.activePage.onBeforeLeaving()
+    const isOnBeforeLeaving = activePage
+      ? await activePage.onBeforeLeaving()
       : true;
 
     // if onBeforeLeaving hook fails, do nothing
@@ -114,16 +124,6 @@ export class FlowController extends Signal {
         state.navigation.isPending = false;
       });
       return false;
-    }
-
-    /**
-     * When navigating to the same page (activePage === targetPage), don't actually navigate, but return true
-     */
-    if (this.activePage === targetPage) {
-      this.setValue(state => {
-        state.navigation.isPending = false;
-      });
-      return true;
     }
 
     // Execute isOnBeforeEntering hook on the target page
@@ -138,37 +138,27 @@ export class FlowController extends Signal {
     }
 
     // if all conditions are met, navigate to the target page
-    this.setActivePage(targetPage);
+    // this.setActivePage(targetPage);
 
     // navigation is complete
     this.setValue(state => {
+      state.navigation.completedPage = activePage; // the active page has been completed!
+      state.navigation.activePage = targetPage; // the target page is now active
+      state.navigation.advancedPage = targetPage; // the progress is advanced to the target page
+      state.navigation.visitedPage = targetPage; // the target page is now visited;
       state.navigation.isPending = false;
     });
 
     return true;
   }
 
-  // progress to the next page if navigation successful and set the page status
-  async progress() {
-    const activePage = this.activePage;
-    const isNavigated = await this.navigate(this.nextPage);
-    if (isNavigated) {
-      this.setValue(value => {
-        value.navigation.progressPage = activePage;
-      });
-    }
+  // simple page navigation
+  navigatePage(target) {
+    this.setActivePage(target);
   }
 
   getPageById(id) {
     return this.flattenedPages.find(page => page.id === id);
-  }
-
-  get activePageIndex() {
-    return this.navigationPages.findIndex(page => page === this.activePage);
-  }
-
-  get progressPageIndex() {
-    return this.navigationPages.findIndex(page => page === this.progressPage);
   }
 
   setActivePage(component) {

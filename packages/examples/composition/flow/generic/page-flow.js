@@ -17,6 +17,7 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
       activePageId: { type: String, attribute: "active-page-id" },
       heading: { type: String },
       state: { type: Object },
+      _flowController: { type: Object, state: true },
     };
   }
 
@@ -52,12 +53,16 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
       );
     });
 
+    this.mapStateToSignals({
+      _flowController: this.computed(this.flowController$, ({ value }) => value.navigation),
+    })
+
     // wait for child components to complete initialization
     await this.updateComplete;
 
     // navigate to start page
     if (this.activePageId) {
-      await this.flowController$.navigate(
+      await this.flowController$.advancePage(
         this.flowController$.getPageById(this.activePageId),
       );
     }

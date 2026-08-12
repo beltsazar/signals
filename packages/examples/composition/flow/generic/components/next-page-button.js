@@ -1,7 +1,7 @@
 import { css, html } from "lit";
 import { FlowComponent } from "../flow-component.js";
 
-export class PreviousPage extends FlowComponent {
+export class NextPageButton extends FlowComponent {
   constructor() {
     super();
   }
@@ -16,12 +16,14 @@ export class PreviousPage extends FlowComponent {
   connectedCallback() {
     super.connectedCallback();
     this.mapStateToSignals({
-      isDisabled: this.computed(this.flowController$, ({ value }) => {
-        return (
-          value.navigation.isPending ||
-          this.flowController$.previousPage === null
-        );
-      }),
+      isDisabled: this.computed(
+        [this.flowController$, this.state$],
+        ([{ value }]) => {
+          return (
+            value.navigation.isPending || this.flowController$.nextPage === null
+          );
+        },
+      ),
     });
   }
 
@@ -29,12 +31,12 @@ export class PreviousPage extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  previousPage() {
-    this.flowController$.navigate(this.flowController$.previousPage);
+  nextPage() {
+    this.flowController$.navigatePage(this.flowController$.nextPage);
   }
 
   render() {
-    return html`<button @click="${this.previousPage}">${this.label}</h2></button>`;
+    return html`<button @click="${this.nextPage}">${this.label}</h2></button>`;
   }
 
   static get styles() {

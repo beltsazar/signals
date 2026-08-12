@@ -1,7 +1,7 @@
 import { css, html } from "lit";
 import { FlowComponent } from "../flow-component.js";
 
-export class ProgressPage extends FlowComponent {
+export class AdvanceButton extends FlowComponent {
   constructor() {
     super();
   }
@@ -31,12 +31,12 @@ export class ProgressPage extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  progressPage() {
-    this.flowController$.progress();
+  advancePage() {
+    this.flowController$.advancePage();
   }
 
   render() {
-    return html`<button @click="${this.progressPage}">${this.label}</h2></button>`;
+    return html`<button @click="${this.advancePage}">${this.label}</h2></button>`;
   }
 
   static get styles() {

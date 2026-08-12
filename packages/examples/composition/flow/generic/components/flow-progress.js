@@ -6,14 +6,14 @@ export class FlowProgress extends FlowComponent {
   constructor() {
     super();
     this.activePageIndex = 0;
-    this.progressPageIndex = 0;
+    this.advancedPageIndex = 0;
     this.navigationPages = 0;
   }
 
   static get properties() {
     return {
       activePageIndex: { type: Number, state: true },
-      progressPageIndex: { type: Number, state: true },
+      advancedPageIndex: { type: Number, state: true },
       navigationPages: { type: Number, state: true },
     };
   }
@@ -25,9 +25,9 @@ export class FlowProgress extends FlowComponent {
         [this.flowController$, this.state$],
         () => this.flowController$.activePageIndex,
       ),
-      progressPageIndex: this.computed(
+      advancedPageIndex: this.computed(
         [this.flowController$, this.state$],
-        () => this.flowController$.progressPageIndex,
+        () => this.flowController$.advancedPageIndex,
       ),
       navigationPages: this.computed(
         [this.flowController$, this.state$],
@@ -47,7 +47,7 @@ export class FlowProgress extends FlowComponent {
         ${this.navigationPages.map((page, index) => {
           const classes = {
             activePage: index === this.activePageIndex,
-            progressPage: index <= this.progressPageIndex,
+            advancedPage: index <= this.advancedPageIndex,
           };
           return html`<p class=${classMap(classes)}></p>`;
         })}
@@ -70,7 +70,7 @@ export class FlowProgress extends FlowComponent {
 
       p {
         flex-grow: 1;
-        border: 4px solid #000;
+        border: 4px solid lightgray;
         height: 10px;
       }
 
@@ -79,12 +79,13 @@ export class FlowProgress extends FlowComponent {
         background-color: red;
       }
 
-      p.activePage.progressPage {
-        xborder: 2px solid red;
+      p.advancedPage {
+        background-color: black;
       }
 
-      p.progressPage {
-        background-color: green;
+      p.activePage.advancedPage {
+        border: 4px solid red;
+        background-color: red;
       }
     `;
   }

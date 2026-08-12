@@ -13,8 +13,10 @@ export class FlowPage extends SignalsProviderMixin(
   constructor() {
     super();
     this.isActive = false;
+    this.isAdvanced = false;
+    this.isCompleted = false;
+    this.isVisited = false;
     this.isBusy = false;
-    this.isProgress = false;
     this.hasActiveChildPage = false;
     this.options = null;
   }
@@ -24,8 +26,10 @@ export class FlowPage extends SignalsProviderMixin(
       heading: { type: String },
       options: { type: Object },
       isActive: { type: Boolean, attribute: "is-active", reflect: true },
+      isAdvanced: { type: Boolean, attribute: "is-advanced", reflect: true },
+      isCompleted: { type: Boolean, attribute: "is-completed", reflect: true },
+      isVisited: { type: Boolean, attribute: "is-completed", reflect: true },
       isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
-      isProgress: { type: Boolean, attribute: "is-progress", reflect: true },
       hasActiveChildPage: {
         type: Boolean,
         attribute: "has-active-child-page",
@@ -76,15 +80,23 @@ export class FlowPage extends SignalsProviderMixin(
         this.pageController$,
         ({ value }) => value.isActive,
       ),
+      isAdvanced: this.computed(
+        this.pageController$,
+        ({ value }) => value.isAdvanced,
+      ),
+      isCompleted: this.computed(
+        this.pageController$,
+        ({ value }) => value.isCompleted,
+      ),
+      isVisited: this.computed(
+        this.pageController$,
+        ({ value }) => value.isVisited,
+      ),
       hasActiveChildPage: this.computed(
         this.pageController$,
         ({ value }) => value.hasActiveChildPage,
       ),
       isBusy: this.computed(this.pageController$, ({ value }) => value.isBusy),
-      isProgress: this.computed(
-        this.pageController$,
-        ({ value }) => value.isProgress,
-      ),
     });
 
     // Watch the flowController$ for navigation updates
@@ -167,12 +179,17 @@ export class FlowPage extends SignalsProviderMixin(
    */
   render() {
     const breadCrumb = this.parentPageController$?.component.heading;
-    return html`
+    return html`<p><pre>
+      isActive: ${this.isActive}
+      isAdvanced: ${this.isAdvanced}
+      isCompleted: ${this.isCompleted}
+      isVisited:  ${this.isVisited}
+    </pre></p>
       ${
         this.isActive
           ? html` ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
               <h2>${this.heading}</h2>
-              ${this.isProgress}
+              ${this.isAdvanced}
               <slot></slot>`
           : ""
       }
