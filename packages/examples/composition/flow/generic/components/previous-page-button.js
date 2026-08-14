@@ -9,7 +9,7 @@ export class PreviousPageButton extends FlowComponent {
   static get properties() {
     return {
       label: { type: String },
-      isDisabled: { type: Boolean, attribute: "is-disabled", reflect: true },
+      isDisabled: { type: Boolean },
     };
   }
 
@@ -34,7 +34,7 @@ export class PreviousPageButton extends FlowComponent {
   }
 
   render() {
-    return html`<button @click="${this.previousPage}">${this.label}</h2></button>`;
+    return html`<button ?disabled="${this.isDisabled}" @click="${this.previousPage}">${this.label}</h2></button>`;
   }
 
   static get styles() {
@@ -42,10 +42,6 @@ export class PreviousPageButton extends FlowComponent {
       :host {
         display: inline-block;
         padding-bottom: 16px;
-      }
-
-      :host([is-disabled]) {
-        opacity: 0.3;
       }
     `;
   }

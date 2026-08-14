@@ -47,14 +47,20 @@ export class FlowProgress extends FlowComponent {
     });
   }
 
+  navigatePage(page) {
+    this.flowController$.navigatePage(page);
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
   }
 
   render() {
-    return html`Page
-      ${this.flowController$.getNavigationPageIndex(this.navigationStatus?.activePage) + 1}
-      from ${this.navigationPages.length} pages
+    return html`<p>
+        Page
+        ${this.flowController$.getNavigationPageIndex(this.navigationStatus?.activePage) + 1}
+        from ${this.navigationPages.length} pages
+      </p>
       <div>
         ${this.navigationPages.map((page, index) => {
           // extract state from signal, NOT from the component itself
@@ -67,7 +73,18 @@ export class FlowProgress extends FlowComponent {
             completed: isCompleted,
             visited: isVisited,
           };
-          return html`<p class=${classMap(classes)}>${index + 1}</p>`;
+
+          return html`${
+            isVisited
+              ? html`<button
+                  href="#"
+                  @click="${() => this.navigatePage(page)}"
+                  class="navigate ${classMap(classes)}"
+                >
+                  ${index + 1}
+                </button>`
+              : html`<button class=${classMap(classes)}>${index + 1}</button>`
+          }`;
         })}
       </div> `;
   }
@@ -86,36 +103,41 @@ export class FlowProgress extends FlowComponent {
         gap: 10px;
       }
 
-      p {
+      button {
         flex-grow: 1;
         border: 2px dashed lightgray;
         text-align: center;
       }
 
-      p.visited {
+      .visited {
         border: 2px solid black;
       }
 
-      p.active {
+      .active {
         background-color: red;
       }
 
-      p.completed {
+      .completed {
         background-color: green;
         color: white;
       }
 
-      p.advanced {
+      .advanced {
         border: 2px dashed black;
       }
 
-      p.active.completed {
+      .active.completed {
         background-color: red;
         color: black;
       }
 
-      p.active.advanced {
+      .active.advanced {
         border: 2px solid black;
+      }
+
+      .navigate:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px 1px grey;
       }
     `;
   }
