@@ -5,7 +5,7 @@ import { FlowPage } from "../generic/flow-page.js";
 import { CustomFlowComponent } from "./custom-flow-component.js";
 import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
 import { PreviousPageButton } from "../generic/components/previous-page-button.js";
-import { AdvanceButton } from "../generic/components/advance-button.js";
+import { NextPageButton } from "../generic/components/next-page-button.js";
 import { FlowProgress } from "../generic/components/flow-progress.js";
 
 export class FlowDemo extends ScopedElementsMixin(LitElement) {
@@ -29,7 +29,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
       "flow-page": FlowPage,
       "flow-progress": FlowProgress,
       "previous-page-button": PreviousPageButton,
-      "advance-page-button": AdvanceButton,
+      "next-page-button": NextPageButton,
       "custom-flow-component": CustomFlowComponent,
       "custom-flow-component-async": CustomFlowComponentAsync,
     };
@@ -77,7 +77,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
         <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
         <button @click="${this.addProfession}">Add Profession</button>
         <previous-page-button label="Previous Page"></previous-page-button>
-        <advance-page-button label="Proceed"></advance-page-button>
+        <next-page-button label="Next Page"></next-page-button>
         <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
         <flow-page id="2" heading="Page 2"
           >Slotted Content ...

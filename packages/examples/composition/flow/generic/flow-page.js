@@ -182,7 +182,6 @@ export class FlowPage extends SignalsProviderMixin(
         this.isActive
           ? html` ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
               <h2>${this.heading}</h2>
-              ${this.isAdvanced}
               <slot></slot>`
           : ""
       }

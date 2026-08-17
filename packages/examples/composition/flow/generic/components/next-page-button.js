@@ -31,12 +31,12 @@ export class NextPageButton extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  nextPage() {
-    this.flowController$.navigatePage(this.flowController$.nextPage);
+  commitPage() {
+    this.flowController$.commitPage();
   }
 
   render() {
-    return html`<button @click="${this.nextPage}">${this.label}</h2></button>`;
+    return html`<button @click="${this.commitPage}">${this.label}</h2></button>`;
   }
 
   static get styles() {
