@@ -19,9 +19,7 @@ export class NextPageButton extends FlowComponent {
       isDisabled: this.computed(
         [this.flowController$, this.state$],
         ([{ value }]) => {
-          return (
-            value.navigation.isPending || this.flowController$.nextPage === null
-          );
+          return value.navigation.isPending;
         },
       ),
     });
@@ -31,12 +29,12 @@ export class NextPageButton extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  commitPage() {
-    this.flowController$.commitPage(this.flowController$.nextPage);
+  advancePage() {
+    this.flowController$.advancePage();
   }
 
   render() {
-    return html`<button @click="${this.commitPage}">${this.label}</h2></button>`;
+    return html`<button @click="${this.advancePage}">${this.label}</h2></button>`;
   }
 
   static get styles() {

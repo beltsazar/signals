@@ -3,6 +3,7 @@ import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
 import { PageFlow } from "../generic/page-flow.js";
 import { FlowPage } from "../generic/flow-page.js";
 import { CustomFlowComponent } from "./custom-flow-component.js";
+import { CustomFlowComponent2 } from "./custom-flow-component-2.js";
 import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
 import { PreviousPageButton } from "../generic/components/previous-page-button.js";
 import { NextPageButton } from "../generic/components/next-page-button.js";
@@ -33,6 +34,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
       "previous-page-button": PreviousPageButton,
       "next-page-button": NextPageButton,
       "custom-flow-component": CustomFlowComponent,
+      "custom-flow-component-2": CustomFlowComponent2,
       "custom-flow-component-async": CustomFlowComponentAsync,
     };
   }
@@ -74,7 +76,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
 
   render() {
     return html`
-      <page-flow active-page-id="1" .state=${this.state} @state-updated="${e => this.updateState(e)}">
+      <page-flow start-page-id="1" .state=${this.state} @state-updated="${e => this.updateState(e)}">
         <div slot="heading"><h1>Page Flow</h1>
           <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
           <button @click="${this.addProfession}">Add Profession</button>
@@ -109,7 +111,9 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
               <button @click="${this.showConditionalPageGroup}">Toggle conditional page group</button></flow-page>
             <flow-page id="8" heading="Conditional Page Group 8" .options="${{ condition: state => state.showConditionalPageGroup }}">Slotted Content ...
               <div slot="pages">
-                <flow-page id="9" heading="Nested Page 9">Slotted Content ...<button @click="${this.showConditionalPageInsideGroup}">Toggle conditional page inside group</button></flow-page>
+                <flow-page id="9" heading="Nested Page 9">
+                  <custom-flow-component-2></custom-flow-component-2>
+                </flow-page>
                 <flow-page id="10" heading="Conditional Nested Page 10" .options="${{ condition: state => state.showConditionalPageInsideGroup }}">Slotted Content ...</flow-page>
                 <flow-page id="11" heading="Nested Page 11">Slotted Content ...</flow-page>
               </div>

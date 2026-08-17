@@ -9,12 +9,12 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
   constructor() {
     super();
     this.state = {};
-    this.activePageId = null;
+    this.startPageId = null;
   }
 
   static get properties() {
     return {
-      activePageId: { type: String, attribute: "active-page-id" },
+      startPageId: { type: String, attribute: "start-page-id" },
       heading: { type: String },
       state: { type: Object },
       _flowController: { type: Object, state: true },
@@ -64,11 +64,10 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
     await this.updateComplete;
 
     // navigate to start page
-    if (this.activePageId) {
-      await this.flowController$.commitPage(
-        this.flowController$.getPageById(this.activePageId),
-      );
-    }
+    const startPage =
+      this.flowController$.getPageById(this.startPageId) ??
+      this.flowController$.nextPage;
+    await this.flowController$.advancePage(startPage);
   }
 
   disconnectedCallback() {

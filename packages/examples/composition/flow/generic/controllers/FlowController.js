@@ -107,14 +107,8 @@ export class FlowController extends Signal {
    * Commit consumer changes on the active page and advance to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
    * @returns {Promise<boolean>}
    */
-  async commitPage(targetPage) {
+  async advancePage(targetPage) {
     const activePage = this.activePage;
-    targetPage = targetPage ?? this.nextPage;
-
-    // if the target page is null or is already active, do nothing
-    if (!targetPage) {
-      return false;
-    }
 
     this.setValue(state => {
       state.navigation.isPending = true;
@@ -133,6 +127,24 @@ export class FlowController extends Signal {
       return false;
     }
 
+    // if the target page is not provided, use the next page in the sequence
+    targetPage = targetPage ?? this.nextPage;
+
+    // if there is no next page, the navigation is complete
+    if (!targetPage) {
+      // navigation is complete
+      this.setValue(state => {
+        state.navigation.completedPage = activePage; // the active page has been completed!
+        state.navigation.isPending = false;
+      });
+
+      return true;
+    }
+
+    /**
+     * If there is a next target page, continue with the navigation process:
+     */
+
     // Execute isOnBeforeEntering hook on the target page
     const isOnBeforeEntering = await targetPage.onBeforeEntering();
 
@@ -143,9 +155,6 @@ export class FlowController extends Signal {
       });
       return false;
     }
-
-    // if all conditions are met, navigate to the target page
-    // this.setActivePage(targetPage);
 
     // navigation is complete
     this.setValue(state => {
