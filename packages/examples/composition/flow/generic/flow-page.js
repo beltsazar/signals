@@ -112,7 +112,7 @@ export class FlowPage extends SignalsProviderMixin(
   // when page becomes visible in DOM, fire activation hook
   updated(changedProperties) {
     if (changedProperties.has("isActive") && this.isActive) {
-      this.onActivated();
+      this.onAfterEntering();
     }
   }
 
@@ -154,9 +154,9 @@ export class FlowPage extends SignalsProviderMixin(
    * onActivated Hook
    * age has become visible and ready for user interaction or DOM manipulation
    */
-  onActivated() {
+  onAfterEntering() {
     this.pageController$.components.forEach(component => {
-      component.onActivated?.();
+      component.onAfterEntering?.();
     });
   }
 

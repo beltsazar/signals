@@ -52,7 +52,7 @@ export class CustomFlowComponent extends FlowComponent {
     return isValid;
   }
 
-  onActivated() {
+  onAfterEntering() {
     const button = this.buttonRef.value;
     button.focus();
   }
