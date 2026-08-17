@@ -83,16 +83,13 @@ export class FlowController extends Signal {
 
   /**
    * Commit consumer changes on the active page and advance to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
-   * @param targetPage
    * @returns {Promise<boolean>}
    */
-  async commitPage(targetPage) {
+  async commitPage() {
     const activePage = this.activePage;
+    const targetPage = this.nextPage;
 
     // if no target page is provided, advance to the next page
-    if (!targetPage) {
-      targetPage = this.nextPage;
-    }
 
     // if the target page is null or is already active, do nothing
     if (!targetPage) {
@@ -138,6 +135,12 @@ export class FlowController extends Signal {
       state.navigation.visitedPage = targetPage; // the target page is now visited;
       state.navigation.isPending = false;
     });
+
+    // allow the target page to become active, update its state and become visible
+    await targetPage.updateComplete;
+
+    // Execute onAfterEntering hook on the target page to execute display logic
+    targetPage.onAfterEntering();
 
     return true;
   }

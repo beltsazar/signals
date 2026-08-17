@@ -31,12 +31,12 @@ export class AdvanceButton extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  advancePage() {
+  commitPage() {
     this.flowController$.commitPage();
   }
 
   render() {
-    return html`<button @click="${this.advancePage}">${this.label}</h2></button>`;
+    return html`<button @click="${this.commitPage}">${this.label}</h2></button>`;
   }
 
   static get styles() {
