@@ -83,9 +83,8 @@ export class FlowNavigator extends FlowComponent {
                   href="#"
                   @click="${e => this.navigatePage(e, page)}"
                   class="navigate ${classMap(classes)}"
+                  >${page.heading}</a
                 >
-                  ${page.heading}
-                </a>
               </li>`
             : html`<li>
                 <p class=${classMap(classes)}>${page.heading}</p>
@@ -107,42 +106,56 @@ export class FlowNavigator extends FlowComponent {
         border: 1px dotted #000;
       }
 
-      div {
-        display: block;
-        justify-content: space-between;
-        gap: 10px;
+      ul,
+      li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
       }
 
-      button {
+      li {
+        padding-left: 16px;
+      }
+
+      div > ul > li {
+        padding-left: 0;
+      }
+
+      p,
+      a {
         display: block;
-        border: 2px dashed lightgray;
-        text-align: center;
+        padding: 2px 12px 2px 0;
+        margin-bottom: 6px;
+        color: lightgray;
       }
 
       .visited {
-        border: 2px solid black;
-      }
-
-      .active {
-        background-color: red;
-      }
-
-      .completed {
-        background-color: green;
-        color: white;
-      }
-
-      .advanced {
-        border: 2px dashed black;
-      }
-
-      .active.completed {
-        background-color: red;
         color: black;
       }
 
+      .active {
+        border-right: 10px solid red;
+        color: red;
+        font-weight: bold;
+      }
+
+      .completed {
+        border-right: 10px solid green;
+        color: green;
+      }
+
+      .advanced {
+        border-right: 10px solid black;
+      }
+
+      .active.completed {
+        border-right: 10px solid red;
+        color: red;
+        font-weight: bold;
+      }
+
       .active.advanced {
-        border: 2px solid black;
+        border-right: 10px solid red;
       }
 
       .navigate:hover {

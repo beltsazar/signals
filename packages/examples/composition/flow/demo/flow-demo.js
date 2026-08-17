@@ -74,7 +74,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
 
   render() {
     return html`
-      <page-flow active-page-id="5" .state=${this.state} @state-updated="${e => this.updateState(e)}">
+      <page-flow active-page-id="1" .state=${this.state} @state-updated="${e => this.updateState(e)}">
         <div slot="heading"><h1>Page Flow</h1>
           <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
           <button @click="${this.addProfession}">Add Profession</button>

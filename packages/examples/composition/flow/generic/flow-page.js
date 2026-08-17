@@ -175,9 +175,11 @@ export class FlowPage extends SignalsProviderMixin(
     return html`
       ${
         this.isActive
-          ? html` ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
+          ? html`<div class="page-content">
+              ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
               <h2>${this.heading}</h2>
-              <slot></slot>`
+              <slot></slot>
+            </div>`
           : ""
       }
       <slot name="pages"></slot>
@@ -200,7 +202,7 @@ export class FlowPage extends SignalsProviderMixin(
         display: block;
       }
 
-      :host([is-busy]) {
+      :host([is-busy]) .page-content {
         opacity: 0.3;
       }
     `;
