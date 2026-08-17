@@ -32,7 +32,7 @@ export class NextPageButton extends FlowComponent {
   }
 
   commitPage() {
-    this.flowController$.commitPage();
+    this.flowController$.commitPage(this.flowController$.nextPage);
   }
 
   render() {

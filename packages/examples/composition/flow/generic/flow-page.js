@@ -172,12 +172,7 @@ export class FlowPage extends SignalsProviderMixin(
    */
   render() {
     const breadCrumb = this.parentPageController$?.component.heading;
-    return html`<p><pre>
-      isActive: ${this.isActive}
-      isAdvanced: ${this.isAdvanced}
-      isCompleted: ${this.isCompleted}
-      isVisited:  ${this.isVisited}
-    </pre></p>
+    return html`
       ${
         this.isActive
           ? html` ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}

@@ -46,6 +46,7 @@ export class FlowController extends Signal {
           return;
         }
         accumulator.push(page);
+
         if (page.pageController$.pages.size > 0) {
           getPages(page.pageController$.pages, accumulator);
         }
@@ -53,6 +54,27 @@ export class FlowController extends Signal {
       return accumulator;
     }
     return getPages(this.pages);
+  }
+
+  get nestedNavigationPages() {
+    function getNestedPages(pages, accumulator = []) {
+      pages.forEach(page => {
+        // skip pages that have no valid condition
+        if (!page.isConditionValid()) {
+          return;
+        }
+
+        if (page.pageController$.pages.size > 0) {
+          const children = [];
+          getNestedPages(page.pageController$.pages, children);
+          accumulator.push(page, children);
+        } else {
+          accumulator.push(page);
+        }
+      });
+      return accumulator;
+    }
+    return getNestedPages(this.pages);
   }
 
   get nextPage() {
@@ -85,11 +107,9 @@ export class FlowController extends Signal {
    * Commit consumer changes on the active page and advance to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
    * @returns {Promise<boolean>}
    */
-  async commitPage() {
+  async commitPage(targetPage) {
     const activePage = this.activePage;
-    const targetPage = this.nextPage;
-
-    // if no target page is provided, advance to the next page
+    targetPage = targetPage ?? this.nextPage;
 
     // if the target page is null or is already active, do nothing
     if (!targetPage) {

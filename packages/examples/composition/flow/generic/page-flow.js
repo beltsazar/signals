@@ -76,17 +76,16 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
   }
 
   render() {
-    return html`<h1>${this.heading}</h1>
-      <slot></slot> `;
+    return html`
+      <slot name="heading"></slot>
+      <slot></slot>
+    `;
   }
 
   static get styles() {
     return css`
       :host {
-        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
         display: block;
-        border: 1px solid #000;
-        padding: 16px;
       }
     `;
   }

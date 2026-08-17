@@ -7,6 +7,7 @@ import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
 import { PreviousPageButton } from "../generic/components/previous-page-button.js";
 import { NextPageButton } from "../generic/components/next-page-button.js";
 import { FlowProgress } from "../generic/components/flow-progress.js";
+import { FlowNavigator } from "../generic/components/flow-navigator.js";
 
 export class FlowDemo extends ScopedElementsMixin(LitElement) {
   constructor() {
@@ -27,6 +28,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
     return {
       "page-flow": PageFlow,
       "flow-page": FlowPage,
+      "flow-navigator": FlowNavigator,
       "flow-progress": FlowProgress,
       "previous-page-button": PreviousPageButton,
       "next-page-button": NextPageButton,
@@ -72,44 +74,53 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
 
   render() {
     return html`
-      <page-flow active-page-id="1" heading="Page Flow" .state=${this.state} @state-updated="${e => this.updateState(e)}">
-        <flow-progress></flow-progress>
-        <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
-        <button @click="${this.addProfession}">Add Profession</button>
-        <previous-page-button label="Previous Page"></previous-page-button>
-        <next-page-button label="Next Page"></next-page-button>
-        <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
-        <flow-page id="2" heading="Page 2"
-          >Slotted Content ...
-          <div slot="pages">
-            <flow-page id="3" heading="Page 3 nested inside page 2"
+      <page-flow active-page-id="5" .state=${this.state} @state-updated="${e => this.updateState(e)}">
+        <div slot="heading"><h1>Page Flow</h1>
+          <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
+          <button @click="${this.addProfession}">Add Profession</button>
+        </div>
+        <div><flow-progress></flow-progress></div>
+        <div class="container">
+          <flow-navigator ></flow-navigator>
+          <div class="pages">
+            <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
+            <flow-page id="2" heading="Page 2"
               >Slotted Content ...
               <div slot="pages">
-                <flow-page id="4"
-                  heading="Page 4 nested inside 3"
-                  >Slotted Content ...<custom-flow-component heading="Custom page"></custom-flow-component>
+                <flow-page id="3" heading="Page 3 nested inside page 2"
+                  >Slotted Content ...
+                  <div slot="pages">
+                    <flow-page id="4"
+                      heading="Page 4 nested inside 3"
+                      >Slotted Content ...<custom-flow-component heading="Custom page"></custom-flow-component>
+                    </flow-page>
+                  </div>
                 </flow-page>
               </div>
             </flow-page>
+            <flow-page id="5" heading="Page 5"
+              >Slotted Content ...
+              <custom-flow-component-async
+                heading="Custom page with async content"
+              </custom-flow-component-async>
+            </flow-page>
+            <flow-page id="6" heading="Page 6">Slotted Content ... <button @click="${this.showConditionalPage}">Toggle conditional page</button></flow-page>
+            <flow-page id="7" heading="Conditional Page 7" .options="${{ condition: state => state.showConditionalPage }}">Slotted Content ...
+              <button @click="${this.showConditionalPageGroup}">Toggle conditional page group</button></flow-page>
+            <flow-page id="8" heading="Conditional Page Group 8" .options="${{ condition: state => state.showConditionalPageGroup }}">Slotted Content ...
+              <div slot="pages">
+                <flow-page id="9" heading="Nested Page 9">Slotted Content ...<button @click="${this.showConditionalPageInsideGroup}">Toggle conditional page inside group</button></flow-page>
+                <flow-page id="10" heading="Conditional Nested Page 10" .options="${{ condition: state => state.showConditionalPageInsideGroup }}">Slotted Content ...</flow-page>
+                <flow-page id="11" heading="Nested Page 11">Slotted Content ...</flow-page>
+              </div>
+            </flow-page>
+            <flow-page id="12" heading="Last Page 12">Slotted Content ...</flow-page>
           </div>
-        </flow-page>
-        <flow-page id="5" heading="Page 5"
-          >Slotted Content ...
-          <custom-flow-component-async
-            heading="Custom page with async content"
-          </custom-flow-component-async>
-        </flow-page>
-        <flow-page id="6" heading="Page 6">Slotted Content ... <button @click="${this.showConditionalPage}">Toggle conditional page</button></flow-page>
-        <flow-page id="7" heading="Conditional Page 7" .options="${{ condition: state => state.showConditionalPage }}">Slotted Content ...
-          <button @click="${this.showConditionalPageGroup}">Toggle conditional page group</button></flow-page>
-        <flow-page id="8" heading="Conditional Page Group 8" .options="${{ condition: state => state.showConditionalPageGroup }}">Slotted Content ...
-          <div slot="pages">
-            <flow-page id="9" heading="Nested Page 9">Slotted Content ...<button @click="${this.showConditionalPageInsideGroup}">Toggle conditional page inside group</button></flow-page>
-            <flow-page id="10" heading="Conditional Nested Page 10" .options="${{ condition: state => state.showConditionalPageInsideGroup }}">Slotted Content ...</flow-page>
-            <flow-page id="11" heading="Nested Page 11">Slotted Content ...</flow-page>
-          </div>
-        </flow-page>
-        <flow-page id="12" heading="Last Page 12">Slotted Content ...</flow-page>
+        </div>
+        <div class="buttons">
+          <previous-page-button label="Previous Page"></previous-page-button>
+          <next-page-button label="Next Page"></next-page-button>
+        </div>
       </page-flow>
     `;
   }
@@ -117,7 +128,28 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
   static get styles() {
     return css`
       :host {
+        font-family: system-ui, "Segoe UI", Roboto, sans-serif;
         display: block;
+        border: 1px solid #000;
+        padding: 16px;
+      }
+
+      :host div {
+        margin-bottom: 16px;
+      }
+
+      .container,
+      .buttons {
+        display: flex;
+        gap: 16px;
+      }
+
+      .pages {
+        flex-grow: 1;
+      }
+
+      .buttons {
+        justify-content: space-between;
       }
     `;
   }
