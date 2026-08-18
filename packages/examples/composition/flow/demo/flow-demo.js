@@ -1,4 +1,5 @@
 import { LitElement, css, html } from "lit";
+import { cache } from "lit/directives/cache.js";
 import { ScopedElementsMixin } from "@open-wc/scoped-elements/lit-element.js";
 import { PageFlow } from "../generic/page-flow.js";
 import { FlowPage } from "../generic/flow-page.js";
@@ -17,11 +18,13 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
       user: "John Doe",
       age: 27,
     };
+    this.isCacheViewShown = true;
   }
 
   static get properties() {
     return {
       state: { type: Object, state: true },
+      isCacheViewShown: { type: Number, state: true },
     };
   }
 
@@ -74,9 +77,8 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
     this.state = { ...this.state, showConditionalPageInsideGroup };
   }
 
-  render() {
-    return html`
-      <page-flow start-page-id="1" .state=${this.state} @state-updated="${e => this.updateState(e)}">
+  renderPageFlow() {
+    return html`<page-flow start-page-id="1" .state=${this.state} @state-updated="${e => this.updateState(e)}">
         <div slot="heading"><h1>Page Flow</h1>
           <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
           <button @click="${this.addProfession}">Add Profession</button>
@@ -126,7 +128,18 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
           <next-page-button label="Next Page"></next-page-button>
         </div>
       </page-flow>
-    `;
+  `;
+  }
+
+  toggleCacheView() {
+    this.isCacheViewShown = !this.isCacheViewShown;
+  }
+
+  render() {
+    return html` <p>
+        <button @click=${this.toggleCacheView}>Toggle Template Cache</button>
+      </p>
+      ${cache(this.isCacheViewShown ? this.renderPageFlow() : html`<div>Click a gain to switch back ...</div>`)}`;
   }
 
   static get styles() {

@@ -1,4 +1,4 @@
-import { Signal, Watcher } from "../../../../../signals/index.js";
+import { Signal } from "../../../../../signals/index.js";
 
 const state = {
   isActive: false,
@@ -31,7 +31,7 @@ export class PageController extends Signal {
     /**
      * Watch the flowController$ for navigation updates
      */
-    new Watcher(flowController$, ({ value: flowController }) => {
+    this.component.watch(flowController$, ({ value: flowController }) => {
       const isActive = flowController.navigation.activePage === this.component;
       const isAdvanced =
         flowController.navigation.advancedPage === this.component;
@@ -76,7 +76,7 @@ export class PageController extends Signal {
         page => page.pageController$,
       );
 
-      new Watcher([...childPageControllers], childPageController$ => {
+      this.component.watch([...childPageControllers], childPageController$ => {
         this.setValue(value => {
           value.hasActiveChildPage = childPageController$
             .map(

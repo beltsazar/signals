@@ -19,8 +19,7 @@ export class FlowProgress extends FlowComponent {
   connectedCallback() {
     super.connectedCallback();
 
-    // watch flowController$ until it has pages and start to watch ALL pages for navigation changes
-    const initialWatcher = this.watch(this.flowController$, () => {
+    this.initialWatcher = this.watch(this.flowController$, () => {
       const flattenedPages = this.flowController$.flattenedPages;
 
       // if the flowController$ has pages, watch the pageControllers
@@ -35,7 +34,7 @@ export class FlowProgress extends FlowComponent {
         });
 
         // dispose the watcher after the first time it fires
-        initialWatcher.dispose();
+        this.initialWatcher?.dispose?.();
       }
     });
 
@@ -53,6 +52,7 @@ export class FlowProgress extends FlowComponent {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.dispose();
   }
 
   render() {

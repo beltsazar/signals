@@ -10,6 +10,7 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
     super();
     this.state = {};
     this.startPageId = null;
+    this.isConnectedCallbackCalled = false;
   }
 
   static get properties() {
@@ -17,7 +18,6 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
       startPageId: { type: String, attribute: "start-page-id" },
       heading: { type: String },
       state: { type: Object },
-      _flowController: { type: Object, state: true },
     };
   }
 
@@ -38,11 +38,13 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
     super.connectedCallback();
     // create a signal based on initial state passed to the component, this will be used to manage the state of the page container and its children
     this.state$ = this.signal(this.state);
+
     // share signals with children
     this.setSignals({
       state$: this.state$,
       flowController$: this.flowController$,
     });
+
     this.watch(this.state$, () => {
       this.dispatchEvent(
         new CustomEvent("state-updated", {
@@ -53,25 +55,23 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
       );
     });
 
-    this.mapStateToSignals({
-      _flowController: this.computed(
-        this.flowController$,
-        ({ value }) => value.navigation,
-      ),
-    });
-
     // wait for child components to complete initialization
     await this.updateComplete;
 
-    // navigate to start page
-    const startPage =
-      this.flowController$.getPageById(this.startPageId) ??
-      this.flowController$.nextPage;
-    await this.flowController$.advancePage(startPage);
+    // navigate to start page initially
+    if (!this.isConnectedCallbackCalled) {
+      const startPage =
+        this.flowController$.getPageById(this.startPageId) ??
+        this.flowController$.nextPage;
+      await this.flowController$.advancePage(startPage);
+    }
+
+    this.isConnectedCallbackCalled = true;
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.dispose();
   }
 
   render() {

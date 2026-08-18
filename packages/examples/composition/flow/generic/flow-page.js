@@ -113,6 +113,7 @@ export class FlowPage extends SignalsProviderMixin(
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.dispose();
   }
 
   /**
