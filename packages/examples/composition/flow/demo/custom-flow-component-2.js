@@ -14,7 +14,8 @@ export class CustomFlowComponent2 extends FlowComponent {
   }
 
   render() {
-    return html`Add conditional page directly after this page and navigate to it directly!`;
+    return html`Add conditional page after this page and navigate to it
+    directly!`;
   }
 
   static get styles() {

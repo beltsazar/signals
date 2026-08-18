@@ -18,6 +18,7 @@ export class FlowPage extends SignalsProviderMixin(
     this.isVisited = false;
     this.isBusy = false;
     this.hasActiveChildPage = false;
+    this.hasContent = false;
     this.options = null;
   }
 
@@ -28,8 +29,9 @@ export class FlowPage extends SignalsProviderMixin(
       isActive: { type: Boolean, attribute: "is-active", reflect: true },
       isAdvanced: { type: Boolean, attribute: "is-advanced", reflect: true },
       isCompleted: { type: Boolean, attribute: "is-completed", reflect: true },
-      isVisited: { type: Boolean, attribute: "is-completed", reflect: true },
+      isVisited: { type: Boolean, attribute: "is-visited", reflect: true },
       isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
+      hasContent: { type: Boolean, attribute: "has-content", reflect: true },
       hasActiveChildPage: {
         type: Boolean,
         attribute: "has-active-child-page",

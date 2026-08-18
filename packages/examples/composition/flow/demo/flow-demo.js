@@ -86,10 +86,10 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
           <flow-navigator ></flow-navigator>
           <div class="pages">
             <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
-            <flow-page id="2" heading="Page 2"
+            <flow-page id="2" heading="Page 2" has-content
               >Slotted Content ...
               <div slot="pages">
-                <flow-page id="3" heading="Page 3 nested inside page 2"
+                <flow-page id="3" heading="Page 3 nested inside page 2" has-content
                   >Slotted Content ...
                   <div slot="pages">
                     <flow-page id="4"

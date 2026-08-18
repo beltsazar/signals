@@ -76,8 +76,11 @@ export class FlowNavigator extends FlowComponent {
           visited: isVisited,
         };
 
+        const isGroup = page.pageController$.pages.size > 0;
+        const isNavigable = isGroup ? isVisited && page.hasContent : isVisited;
+
         return html`${
-          isVisited
+          isNavigable
             ? html`<li>
                 <a
                   href="#"
@@ -114,6 +117,7 @@ export class FlowNavigator extends FlowComponent {
       }
 
       li {
+        margin-bottom: 16px;
         padding-left: 16px;
       }
 
@@ -124,8 +128,7 @@ export class FlowNavigator extends FlowComponent {
       p,
       a {
         display: block;
-        padding: 2px 12px 2px 0;
-        margin-bottom: 6px;
+        padding: 4px 12px 4px 8px;
         color: lightgray;
       }
 
@@ -146,6 +149,7 @@ export class FlowNavigator extends FlowComponent {
 
       .advanced {
         border-right: 10px solid black;
+        font-weight: bold;
       }
 
       .active.completed {

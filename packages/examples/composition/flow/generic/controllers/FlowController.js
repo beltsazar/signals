@@ -45,10 +45,19 @@ export class FlowController extends Signal {
         if (!page.isConditionValid()) {
           return;
         }
-        accumulator.push(page);
 
-        if (page.pageController$.pages.size > 0) {
+        const isGroup = page.pageController$.pages.size > 0;
+
+        if (isGroup && page.hasContent) {
+          // group pages with content are included in the navigation
+          accumulator.push(page);
+          // add nested pages to the accumulator
           getPages(page.pageController$.pages, accumulator);
+        } else if (isGroup) {
+          // add nested pages to the accumulator
+          getPages(page.pageController$.pages, accumulator);
+        } else {
+          accumulator.push(page);
         }
       });
       return accumulator;
