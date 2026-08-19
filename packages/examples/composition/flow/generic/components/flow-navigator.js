@@ -67,7 +67,7 @@ export class FlowNavigator extends FlowComponent {
         }
 
         // extract state from signal, NOT from the component itself
-        const { isActive, isAdvanced, isCompleted, isVisited } =
+        const { isActive, isAdvanced, isCompleted, isVisited, isBlocked } =
           page.pageController$.value;
 
         const classes = {
@@ -75,10 +75,14 @@ export class FlowNavigator extends FlowComponent {
           advanced: isAdvanced,
           completed: isCompleted,
           visited: isVisited,
+          blocked: isBlocked,
         };
 
+        // check if the page is a group (has subpages)
         const isGroup = page.pageController$.pages.size > 0;
-        const isNavigable = isGroup ? isVisited && page.hasContent : isVisited;
+        // if the page is a group, it is only navigable if it has content
+        const isNavigable =
+          (isGroup ? isVisited && page.hasContent : isVisited) && !isBlocked;
 
         return html`${
           isNavigable
@@ -151,6 +155,10 @@ export class FlowNavigator extends FlowComponent {
       .advanced {
         border-right: 10px solid black;
         font-weight: bold;
+      }
+
+      .blocked {
+        opacity: 0.5;
       }
 
       .active.completed {

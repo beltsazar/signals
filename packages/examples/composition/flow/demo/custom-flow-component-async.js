@@ -42,6 +42,10 @@ export class CustomFlowComponentAsync extends FlowComponent {
     return true;
   }
 
+  onAfterLeaving() {
+    this.flowController$.setBlockedPage(this.pageController$.component);
+  }
+
   render() {
     return html`<h2>${this.heading}</h2>
     ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}

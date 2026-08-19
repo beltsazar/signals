@@ -53,6 +53,14 @@ export class PageController extends Signal {
         flowController.navigation.visitedPage === this.component ||
         advancedPageIndex > componentIndex;
 
+      const blockedPageIndex = flowController$.getFlattenedPageIndex(
+        flowController.navigation.blockedPage,
+      );
+
+      const isBlocked =
+        flowController.navigation.blockedPage === this.component ||
+        blockedPageIndex > componentIndex;
+
       const isBusy = flowController.navigation.isPending;
 
       // update the pageController$ reactive state
@@ -61,6 +69,7 @@ export class PageController extends Signal {
         value.isAdvanced = isAdvanced;
         value.isCompleted = isCompleted;
         value.isVisited = isVisited;
+        value.isBlocked = isBlocked;
         value.isBusy = isBusy;
       });
     });

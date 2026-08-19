@@ -64,7 +64,7 @@ export class FlowProgress extends FlowComponent {
       <div>
         ${this.navigationPages.map((page, index) => {
           // extract state from signal, NOT from the component itself
-          const { isActive, isAdvanced, isCompleted, isVisited } =
+          const { isActive, isAdvanced, isCompleted, isVisited, isBlocked } =
             page.pageController$.value;
 
           const classes = {
@@ -72,10 +72,11 @@ export class FlowProgress extends FlowComponent {
             advanced: isAdvanced,
             completed: isCompleted,
             visited: isVisited,
+            blocked: isBlocked,
           };
 
           return html`${
-            isVisited
+            isVisited && !isBlocked
               ? html`<button
                   href="#"
                   @click="${() => this.navigatePage(page)}"
@@ -124,6 +125,10 @@ export class FlowProgress extends FlowComponent {
 
       .advanced {
         border: 2px dashed black;
+      }
+
+      .blocked {
+        opacity: 0.5;
       }
 
       .active.completed {

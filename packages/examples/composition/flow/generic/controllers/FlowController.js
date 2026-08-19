@@ -6,6 +6,7 @@ const state = {
     advancedPage: null,
     completedPage: null,
     visitedPage: null,
+    blockedPage: null,
     isPending: false,
   },
 };
@@ -106,8 +107,14 @@ export class FlowController extends Signal {
     }
 
     // if the active page is the first in the sequence, return null
-    if (this.activePageIndex > 0) {
-      return this.navigationPages[this.activePageIndex - 1];
+
+    const previousPage =
+      this.activePageIndex > 0
+        ? this.navigationPages[this.activePageIndex - 1]
+        : null;
+
+    if (previousPage && !previousPage.pageController$.value.isBlocked) {
+      return previousPage;
     }
     return null;
   }
@@ -117,7 +124,7 @@ export class FlowController extends Signal {
    * @returns {Promise<boolean>}
    */
   async advancePage(targetPage) {
-    const activePage = this.activePage;
+    const activePage = this.activePage; // might be null if this is the first page in the flow
 
     this.setValue(state => {
       state.navigation.isPending = true;
@@ -135,6 +142,9 @@ export class FlowController extends Signal {
       });
       return false;
     }
+
+    // Execute onAfterLeaving hook on the active page to execute display logic
+    activePage?.onAfterLeaving();
 
     // if the target page is not provided, use the next page in the sequence
     targetPage = targetPage ?? this.nextPage;
@@ -208,5 +218,15 @@ export class FlowController extends Signal {
 
   registerPage(component) {
     this.pages.add(component);
+  }
+
+  /**
+   * The page component and its predecessors are considered blocked, and the user cannot navigate to them anymore.
+   * @param {HTMLElement} component
+   */
+  setBlockedPage(component) {
+    this.setValue(state => {
+      state.navigation.blockedPage = component;
+    });
   }
 }

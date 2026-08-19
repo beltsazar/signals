@@ -17,6 +17,7 @@ export class FlowPage extends SignalsProviderMixin(
     this.isCompleted = false;
     this.isVisited = false;
     this.isBusy = false;
+    this.isBlocked = false;
     this.hasActiveChildPage = false;
     this.hasContent = false;
     this.options = null;
@@ -31,6 +32,7 @@ export class FlowPage extends SignalsProviderMixin(
       isCompleted: { type: Boolean, attribute: "is-completed", reflect: true },
       isVisited: { type: Boolean, attribute: "is-visited", reflect: true },
       isBusy: { type: Boolean, attribute: "is-busy", reflect: true },
+      isBlocked: { type: Boolean, attribute: "is-blocked", reflect: true },
       hasContent: { type: Boolean, attribute: "has-content", reflect: true },
       hasActiveChildPage: {
         type: Boolean,
@@ -94,11 +96,15 @@ export class FlowPage extends SignalsProviderMixin(
         this.pageController$,
         ({ value }) => value.isVisited,
       ),
+      isBusy: this.computed(this.pageController$, ({ value }) => value.isBusy),
+      isBlocked: this.computed(
+        this.pageController$,
+        ({ value }) => value.isBlocked,
+      ),
       hasActiveChildPage: this.computed(
         this.pageController$,
         ({ value }) => value.hasActiveChildPage,
       ),
-      isBusy: this.computed(this.pageController$, ({ value }) => value.isBusy),
     });
 
     // Watch the flowController$ for navigation updates
@@ -132,6 +138,16 @@ export class FlowPage extends SignalsProviderMixin(
   }
 
   /**
+   * onAfterLeaving Hook
+   * @returns {Promise<this is *[]>}
+   */
+  onAfterLeaving() {
+    this.pageController$.components.forEach(component => {
+      component.onAfterLeaving?.();
+    });
+  }
+
+  /**
    * onBeforeEntering Hook
    * @returns {Promise<this is *[]>}
    */
@@ -150,7 +166,7 @@ export class FlowPage extends SignalsProviderMixin(
    * onAfterEntering Hook
    * Page has become visible and ready for user interaction or DOM manipulation
    */
-  async onAfterEntering() {
+  onAfterEntering() {
     this.pageController$.components.forEach(component => {
       component.onAfterEntering?.();
     });
@@ -178,7 +194,8 @@ export class FlowPage extends SignalsProviderMixin(
     return html`
       ${
         this.isActive
-          ? html`<div class="page-content">
+          ? html`<div class="content">
+              ${!!this.isBlocked}
               ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
               <h2>${this.heading}</h2>
               <slot></slot>
@@ -205,7 +222,7 @@ export class FlowPage extends SignalsProviderMixin(
         display: block;
       }
 
-      :host([is-busy]) .page-content {
+      :host([is-busy]) .content {
         opacity: 0.3;
       }
     `;
