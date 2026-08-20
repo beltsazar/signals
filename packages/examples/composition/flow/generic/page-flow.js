@@ -1,10 +1,12 @@
 import { LitElement, css, html } from "lit";
+import { ref, createRef } from "lit/directives/ref.js";
 import { SignalsProviderMixin, isEqual } from "../../../../signals/index.js";
 import { FlowController } from "./controllers/FlowController.js";
 
 export class PageFlow extends SignalsProviderMixin(LitElement) {
   flowController$ = new FlowController(this);
   state$;
+  dialogRef = createRef();
 
   constructor() {
     super();
@@ -32,6 +34,17 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
     ) {
       this.state$.setValue(this.state);
     }
+  }
+
+  showDialog() {
+    let resolver;
+    const deferred = new Promise(resolve => (resolver = resolve));
+    const dialog = this.dialogRef.value;
+    dialog.addEventListener("close", () => resolver(dialog.returnValue), {
+      once: true,
+    });
+    dialog.showModal();
+    return deferred;
   }
 
   async connectedCallback() {
@@ -78,6 +91,23 @@ export class PageFlow extends SignalsProviderMixin(LitElement) {
     return html`
       <slot name="heading"></slot>
       <slot></slot>
+      <dialog ${ref(this.dialogRef)} id="dialog" closedby="none">
+        <h2>Warning!</h2>
+        <p>
+          You have changed data on this page, click "CANCEL" to stay on this
+          page.
+        </p>
+        <p>
+          Then use the "NEXT" button to save your changes and continue the flow
+          from there.
+        </p>
+        <button commandfor="dialog" command="close" value="cancel">
+          Cancel navigation
+        </button>
+        <button commandfor="dialog" command="close" value="confirm">
+          Navigate anyway
+        </button>
+      </dialog>
     `;
   }
 

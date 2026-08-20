@@ -12,10 +12,12 @@ const state = {
 };
 
 export class FlowController extends Signal {
+  element;
   pages = new Set();
 
-  constructor() {
+  constructor(element) {
     super(state);
+    this.element = element;
   }
 
   get activePage() {
@@ -122,7 +124,7 @@ export class FlowController extends Signal {
   /**
    * Commit consumer changes on the active page and advance to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
    * Hooks are executed in the following order:
-   * -  onBeforeNavigation (active page)
+   *  - onBeforeNavigation (active page)
    *  - onBeforeLeaving (async and conditional, active page)
    *  - onAfterLeaving (active page)
    *  - onBeforeEntering (async and conditional, target page)
@@ -224,8 +226,12 @@ export class FlowController extends Signal {
       isFormDataChanged: false,
     };
     if (isFormDataChanged) {
-      //console.log("navigate: data changed, you want to leave so soon?");
-      return;
+      /* Show warning dialog, with option to cancel navigation and use next button to save changes and continue the flow from there. */
+      const response = await this.element.showDialog();
+      /* If user cancels navigation, do nothing */
+      if (response === "cancel") {
+        return;
+      }
     }
 
     this.setActivePage(target);
