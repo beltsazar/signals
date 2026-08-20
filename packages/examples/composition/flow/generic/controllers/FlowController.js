@@ -121,10 +121,29 @@ export class FlowController extends Signal {
 
   /**
    * Commit consumer changes on the active page and advance to the next page in the process, allowing hooks, validation, and consumer logic to be executed.
+   * Hooks are executed in the following order:
+   * -  onBeforeNavigation (active page)
+   *  - onBeforeLeaving (async and conditional, active page)
+   *  - onAfterLeaving (active page)
+   *  - onBeforeEntering (async and conditional, target page)
+   *  - onAfterEntering (target page)
+   *  - onAfterNavigation (target page)
    * @returns {Promise<boolean>}
    */
   async advancePage(targetPage) {
     const activePage = this.activePage; // might be null if this is the first page in the flow
+
+    // First execute onBeforeNavigation hook on the active page if available
+    const { isFormDataChanged } = activePage?.onBeforeNavigation() ?? {
+      isFormDataChanged: false,
+    };
+
+    // If user has not changed the form data AND the page was already completed, just navigate to the next page
+    if (!isFormDataChanged && activePage?.isCompleted) {
+      targetPage = targetPage ?? this.nextPage;
+      await this.navigatePage(targetPage);
+      return true;
+    }
 
     this.setValue(state => {
       state.navigation.isPending = true;
@@ -190,12 +209,28 @@ export class FlowController extends Signal {
     // Execute onAfterEntering hook on the target page to execute display logic
     targetPage.onAfterEntering();
 
+    // use navigation hook also on the target page to execute display logic
+    targetPage.onAfterNavigation();
+
     return true;
   }
 
   // simple page navigation
-  navigatePage(target) {
+  async navigatePage(target) {
+    if (!target || this.activePage === target) {
+      return;
+    }
+    const { isFormDataChanged } = this.activePage?.onBeforeNavigation() ?? {
+      isFormDataChanged: false,
+    };
+    if (isFormDataChanged) {
+      //console.log("navigate: data changed, you want to leave so soon?");
+      return;
+    }
+
     this.setActivePage(target);
+    await target.updateComplete; // wait for the target page to finish rendering
+    target.onAfterNavigation();
   }
 
   getNavigationPageIndex(pageComponent) {

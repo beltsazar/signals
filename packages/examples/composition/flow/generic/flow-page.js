@@ -123,6 +123,16 @@ export class FlowPage extends SignalsProviderMixin(
   }
 
   /**
+   * onBeforeNavigation Hook
+   * @returns {object}
+   */
+  onBeforeNavigation() {
+    return {
+      isFormDataChanged: this.isFormDataChanged(),
+    };
+  }
+
+  /**
    * onBeforeLeaving Hook
    * @returns {Promise<this is *[]>}
    */
@@ -168,7 +178,18 @@ export class FlowPage extends SignalsProviderMixin(
    */
   onAfterEntering() {
     this.pageController$.components.forEach(component => {
+      // component.saveInitialFormData?.(); // save initial form data
       component.onAfterEntering?.();
+    });
+  }
+
+  /**
+   * onAfterNavigation Hook
+   * @returns {boolean}
+   */
+  onAfterNavigation() {
+    this.pageController$.components.forEach(component => {
+      component.saveInitialFormData?.(); // save initial form data, before user can change it
     });
   }
 
@@ -185,17 +206,23 @@ export class FlowPage extends SignalsProviderMixin(
     return true;
   }
 
+  // Check if any of the child components have changed form data
+  isFormDataChanged() {
+    return Array.from(this.pageController$.components)
+      .map(component => component.isFormDataChanged?.())
+      .some(isChanged => isChanged);
+  }
+
   /**
    * Only show this page own content when active, but always allow nested pages to become visible
    * @returns {TemplateResult<1>}
    */
   render() {
-    const breadCrumb = this.parentPageController$?.component.heading;
+    const breadCrumb = this.parentPageController$?.element.heading;
     return html`
       ${
         this.isActive
           ? html`<div class="content">
-              ${!!this.isBlocked}
               ${breadCrumb ? html`<p><em>${breadCrumb}</p></em>` : ""}
               <h2>${this.heading}</h2>
               <slot></slot>

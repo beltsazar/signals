@@ -69,7 +69,7 @@ export class CustomFlowComponent extends FlowComponent {
   }
 
   render() {
-    return html`<h2>${this.heading}</h2>
+    return html`
     ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}
     <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
     ${this.isValidationMessageShown ? html`<p><strong>Update state before going to next step!</strong></p>` : ""}

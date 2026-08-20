@@ -10,34 +10,34 @@ const state = {
 };
 
 export class PageController extends Signal {
-  component; // the page web component
+  element; // the page web element
   pages = new Set();
   components = new Set();
 
-  constructor(component) {
+  constructor(element) {
     super(state);
-    this.component = component;
+    this.element = element;
   }
 
-  registerPage(component) {
-    this.pages.add(component);
+  registerPage(element) {
+    this.pages.add(element);
   }
 
-  registerComponent(component) {
-    this.components.add(component);
+  registerComponent(element) {
+    this.components.add(element);
   }
 
   watchFlowController(flowController$) {
     /**
      * Watch the flowController$ for navigation updates
      */
-    this.component.watch(flowController$, ({ value: flowController }) => {
-      const isActive = flowController.navigation.activePage === this.component;
+    this.element.watch(flowController$, ({ value: flowController }) => {
+      const isActive = flowController.navigation.activePage === this.element;
       const isAdvanced =
-        flowController.navigation.advancedPage === this.component;
+        flowController.navigation.advancedPage === this.element;
 
       const componentIndex = flowController$.getFlattenedPageIndex(
-        this.component,
+        this.element,
       );
       const advancedPageIndex = flowController$.getFlattenedPageIndex(
         flowController.navigation.advancedPage,
@@ -45,12 +45,12 @@ export class PageController extends Signal {
 
       // Everything BEFORE the advancedPage is considered completed
       const isCompleted =
-        flowController.navigation.completedPage === this.component ||
+        flowController.navigation.completedPage === this.element ||
         advancedPageIndex > componentIndex;
 
       // Everything BEFORE and INCLUDING the advancedPage is considered visited
       const isVisited =
-        flowController.navigation.visitedPage === this.component ||
+        flowController.navigation.visitedPage === this.element ||
         advancedPageIndex > componentIndex;
 
       const blockedPageIndex = flowController$.getFlattenedPageIndex(
@@ -58,7 +58,7 @@ export class PageController extends Signal {
       );
 
       const isBlocked =
-        flowController.navigation.blockedPage === this.component ||
+        flowController.navigation.blockedPage === this.element ||
         blockedPageIndex > componentIndex;
 
       const isBusy = flowController.navigation.isPending;
@@ -85,7 +85,7 @@ export class PageController extends Signal {
         page => page.pageController$,
       );
 
-      this.component.watch([...childPageControllers], childPageController$ => {
+      this.element.watch([...childPageControllers], childPageController$ => {
         this.setValue(value => {
           value.hasActiveChildPage = childPageController$
             .map(

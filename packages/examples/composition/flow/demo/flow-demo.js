@@ -6,6 +6,7 @@ import { FlowPage } from "../generic/flow-page.js";
 import { CustomFlowComponent } from "./custom-flow-component.js";
 import { CustomFlowComponent2 } from "./custom-flow-component-2.js";
 import { CustomFlowComponentAsync } from "./custom-flow-component-async.js";
+import { CustomFlowFormComponent } from "./custom-flow-form-component.js";
 import { PreviousPageButton } from "../generic/components/previous-page-button.js";
 import { NextPageButton } from "../generic/components/next-page-button.js";
 import { FlowProgress } from "../generic/components/flow-progress.js";
@@ -39,6 +40,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
       "custom-flow-component": CustomFlowComponent,
       "custom-flow-component-2": CustomFlowComponent2,
       "custom-flow-component-async": CustomFlowComponentAsync,
+      "custom-flow-form-component": CustomFlowFormComponent,
     };
   }
 
@@ -87,7 +89,9 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
         <div class="container">
           <flow-navigator ></flow-navigator>
           <div class="pages">
-            <flow-page id="1" heading="Page 1">Slotted Content ...</flow-page>
+            <flow-page id="1" heading="Page 1"><div>A page with a form inside</div>
+              <custom-flow-form-component></custom-flow-form-component>
+            </flow-page>
             <flow-page id="2" heading="Page 2" has-content
               >Slotted Content ...
               <div slot="pages">
@@ -139,7 +143,7 @@ export class FlowDemo extends ScopedElementsMixin(LitElement) {
     return html` <p>
         <button @click=${this.toggleCacheView}>Toggle Template Cache</button>
       </p>
-      ${cache(this.isCacheViewShown ? this.renderPageFlow() : html`<div>Click a gain to switch back ...</div>`)}`;
+      ${cache(this.isCacheViewShown ? this.renderPageFlow() : html`<div>Click again to switch back ...</div>`)}`;
   }
 
   static get styles() {

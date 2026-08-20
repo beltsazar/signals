@@ -1,7 +1,7 @@
 import { css, html } from "lit";
 import { FlowComponent } from "../generic/flow-component.js";
 
-export class CustomFlowComponentAsync extends FlowComponent {
+export class CustomFlowFormComponent extends FlowComponent {
   constructor() {
     super();
   }
@@ -22,35 +22,36 @@ export class CustomFlowComponentAsync extends FlowComponent {
     super.disconnectedCallback();
   }
 
-  getData() {
-    let resolver;
-    const deferred = new Promise(resolve => (resolver = resolve));
-    setTimeout(() => {
-      this.state$.setValue(value => {
-        value.address = {
-          street: "Coronation Street",
-          number: 77,
-        };
-      });
-      resolver(true);
-    }, 1000);
-    return deferred;
-  }
+  onAfterEntering() {}
 
-  async onBeforeEntering() {
-    await this.getData();
+  onBeforeLeaving() {
+    this.state$.setValue(value => {
+      value.person = this.getSerializedFormData();
+    });
     return true;
-  }
-
-  onAfterLeaving() {
-    this.flowController$.setBlockedPage(this.pageController$.element);
   }
 
   render() {
     return html`
-    ${this.isActive ? html`<strong>Activated!!!!</strong>` : ""}
+      <form
+        name="form"
+        @submit=${e => {
+          this._onSubmit(e);
+        }}
+      >
+        <fieldset>
+          <legend>Please fill out your name:</legend>
+            <p><label>First name</label>
+            <input type="text" name="firstName" />
+            </p><p>
+            <label>Last name</label>
+            <input type="text" name="lastName" />
+        </p>
+        </fieldset>
+      </form>
+          
     <p>State: <pre>${JSON.stringify(this.state, null, 2)}</pre></p>
-    <slot></slot>`;
+   `;
   }
 
   static get styles() {
