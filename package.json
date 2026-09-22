@@ -1,6 +1,6 @@
 {
   "name": "@beltsazar/signals",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Daniel Marcuse",
   "description": "Implementation of Signals for JavaScript and LitElement",
