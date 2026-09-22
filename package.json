@@ -22,7 +22,10 @@
     "build-storybook": "storybook build",
     "storybook:build": "npx http-server ./storybook-static"
   },
-  "repository": "git@github.com:beltsazar/signals.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/beltsazar/signals.git"
+  },
   "exports": {
     ".": {
       "default": "./packages/signals/index.js"
